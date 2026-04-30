@@ -9,7 +9,7 @@ const app = express();
 
 // Middlewares
 const allowedOrigins = process.env.NODE_ENV === 'production' 
-  ? ['https://tu-sitio-intec.netlify.app'] // URL de Netlify
+  ? ['https://progresointec.netlify.app"'] // URL de Netlify
   : ['http://localhost:5173', 'http://127.0.0.1:5173']; // URLs de Vite local
 
 app.use(cors({
