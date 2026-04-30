@@ -3,12 +3,12 @@ const router = express.Router();
 const pensumController = require('../controllers/pensum.controller');
 
 // Endpoint opcional para agregar asignaturas iniciales al pensum
-router.post('/pensum', pensumController.crearAsignatura);
+router.post('/', pensumController.crearAsignatura);
 
 // Endpoint para obtener todo el pensum ordenado por updatedAt
-router.get('/pensum', pensumController.obtenerPensum);
+router.get('/', pensumController.obtenerPensum);
 
 // Endpoint para actualizar estado y/o calificación de una asignatura
-router.put('/pensum/:clave', pensumController.actualizarAsignatura);
+router.put('/:clave', pensumController.actualizarAsignatura);
 
 module.exports = router;

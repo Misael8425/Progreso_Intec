@@ -3,9 +3,9 @@ const router = express.Router();
 const indiceController = require('../controllers/indice.controller');
 
 // Endpoint para guardar y calcular simulación
-router.post('/simulaciones', indiceController.calcularYGuardar);
+router.post('/', indiceController.calcularYGuardar);
 
 // Endpoint para consultar el historial de simulaciones ordenado
-router.get('/simulaciones', indiceController.obtenerHistorial);
+router.get('/', indiceController.obtenerHistorial);
 
 module.exports = router;

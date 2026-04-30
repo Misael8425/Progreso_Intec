@@ -3,9 +3,9 @@ const router = express.Router();
 const trimestreController = require('../controllers/trimestre.controller');
 
 // Endpoint para registrar un trimestre con sus asignaturas cursadas
-router.post('/trimestres', trimestreController.registrarTrimestre);
+router.post('/', trimestreController.registrarTrimestre);
 
 // Endpoint para obtener el historial académico ordenado
-router.get('/trimestres', trimestreController.obtenerHistorial);
+router.get('/', trimestreController.obtenerHistorial);
 
 module.exports = router;

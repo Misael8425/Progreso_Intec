@@ -3,12 +3,12 @@ const router = express.Router();
 const volanteController = require('../controllers/volante.controller');
 
 // Endpoint para obtener el volante activo
-router.get('/volantes/activo', volanteController.obtenerVolanteActivo);
+router.get('/activo', volanteController.obtenerVolanteActivo);
 
 // Endpoint para registrar un nuevo volante
-router.post('/volantes', volanteController.registrarVolante);
+router.post('/', volanteController.registrarVolante);
 
 // Endpoint para historial de volantes
-router.get('/volantes', volanteController.obtenerHistorial);
+router.get('/', volanteController.obtenerHistorial);
 
 module.exports = router;

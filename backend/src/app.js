@@ -24,10 +24,10 @@ app.use(cors({
 app.use(express.json());
 
 // Rutas base
-app.use('/api', indiceRoutes);
-app.use('/api', pensumRoutes);
-app.use('/api', trimestreRoutes);
-app.use('/api', volanteRoutes);
+app.use('/api/simulaciones', indiceRoutes);
+app.use('/api/pensum', pensumRoutes);
+app.use('/api/trimestres', trimestreRoutes);
+app.use('/api/volantes', volanteRoutes);
 
 // Ruta de prueba
 app.get('/api/ping', (req, res) => {
