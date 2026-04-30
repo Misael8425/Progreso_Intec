@@ -1,6 +1,7 @@
 const volanteService = require('../services/volante.service');
 
 async function obtenerVolanteActivo(req, res) {
+  console.log("[VOLANTES] request received: obtenerVolanteActivo");
   try {
     const volante = await volanteService.obtenerVolanteActivo();
     if (!volante) {
@@ -8,28 +9,33 @@ async function obtenerVolanteActivo(req, res) {
     }
     return res.status(200).json(volante);
   } catch (error) {
-    return res.status(500).json({ error: 'Error al obtener el volante activo.', detalle: error.message });
+    console.error("[VOLANTES] Error en obtenerVolanteActivo:", error);
+    return res.status(500).json({ error: "Error interno en Volantes" });
   }
 }
 
 async function registrarVolante(req, res) {
+  console.log("[VOLANTES] request received: registrarVolante");
   try {
     const volante = await volanteService.registrarVolante(req.body);
     return res.status(201).json({
       message: 'Volante de selección registrado correctamente',
-      volante
+      volante: volante ?? {}
     });
   } catch (error) {
-    return res.status(400).json({ error: error.message });
+    console.error("[VOLANTES] Error en registrarVolante:", error);
+    return res.status(500).json({ error: "Error interno en Volantes" });
   }
 }
 
 async function obtenerHistorial(req, res) {
+  console.log("[VOLANTES] request received: obtenerHistorial");
   try {
     const volantes = await volanteService.obtenerHistorialVolantes();
-    return res.status(200).json(volantes);
+    return res.status(200).json(volantes ?? []);
   } catch (error) {
-    return res.status(500).json({ error: 'Error al obtener el historial de volantes.' });
+    console.error("[VOLANTES] Error en obtenerHistorial:", error);
+    return res.status(500).json({ error: "Error interno en Volantes" });
   }
 }
 

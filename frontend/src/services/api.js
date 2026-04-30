@@ -25,7 +25,7 @@ export const obtenerVolanteActivo = async () => {
 };
 
 export const obtenerHistorialSimulaciones = async () => {
-  const response = await fetch(`${API_URL}/simulaciones`);
+  const response = await fetch(`${API_URL}/indice`);
   if (!response.ok) {
     throw new Error('Error al obtener el historial de simulaciones');
   }
@@ -33,7 +33,7 @@ export const obtenerHistorialSimulaciones = async () => {
 };
 
 export const calcularSimulacion = async (asignaturas) => {
-  const response = await fetch(`${API_URL}/simulaciones`, {
+  const response = await fetch(`${API_URL}/indice`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
