@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Simulacion {
+  id              Int          @id @default(autoincrement())
+  indiceCalculado Float
+  createdAt       DateTime     @default(now())
+  asignaturas     Asignatura[]
+}
+
+model Asignatura {
+  id                  Int        @id @default(autoincrement())
+  simulacionId        Int
+  creditos            Int
+  calificacionLiteral String
+  puntos              Float?     // opcional, para guardar cuánto sumó
+  simulacion          Simulacion @relation(fields: [simulacionId], references: [id])
+}
+
+model AsignaturaPensum {
+  id                Int      @id @default(autoincrement())
+  clave             String   @unique
+  nombre            String
+  creditos          Int
+  trimestreSugerido Int
+  estado            String   @default("Pendiente")
+  calificacion      String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  asignaturasCursadas AsignaturaCursada[]
+  horarios          HorarioAsignatura[]
+}
+
+model Trimestre {
+  id               String   @id @default(uuid())
+  periodo          String
+  anio             Int
+  indiceTrimestral Float?
+  indiceAcumulado  Float?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  asignaturas      AsignaturaCursada[]
+}
+
+model AsignaturaCursada {
+  id              String           @id @default(uuid())
+  trimestreId     String
+  claveMateria    String
+  calificacion    String
+  puntos          Float
+  trimestre       Trimestre        @relation(fields: [trimestreId], references: [id])
+  asignaturaPensum AsignaturaPensum @relation(fields: [claveMateria], references: [clave])
+}
+
+model VolanteSeleccion {
+  id        String   @id @default(uuid())
+  periodo   String   @unique
+  activo    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  horarios  HorarioAsignatura[]
+}
+
+model HorarioAsignatura {
+  id               String           @id @default(uuid())
+  volanteId        String
+  claveMateria     String
+  profesor         String
+  dia              String
+  horas            String
+  aula             String
+  volante          VolanteSeleccion @relation(fields: [volanteId], references: [id])
+  asignaturaPensum AsignaturaPensum @relation(fields: [claveMateria], references: [clave])
+}
