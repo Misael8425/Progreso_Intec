@@ -201,6 +201,81 @@ async function main() {
   }
 
   console.log(`¡Éxito! Pensum de ${pensumOficial.length} materias cargado correctamente.`);
+
+  console.log("3. Limpiando historial y volantes previos...");
+  await prisma.horarioAsignatura.deleteMany({});
+  await prisma.volanteSeleccion.deleteMany({});
+  await prisma.asignaturaCursada.deleteMany({});
+  await prisma.trimestre.deleteMany({});
+
+  console.log("4. Creando historial de trimestres...");
+  // Trimestre 1: 4 materias, 14 creditos, gpa 4.00
+  await prisma.trimestre.create({
+    data: {
+      periodo: "Noviembre - Enero",
+      anio: 2025,
+      indiceTrimestral: 4.00,
+      indiceAcumulado: 4.00,
+      asignaturas: {
+        create: [
+          { claveMateria: "AHC109", calificacion: "A", puntos: 16 }, // 4 cr * 4
+          { claveMateria: "CBM101", calificacion: "A", puntos: 20 }, // 5 cr * 4
+          { claveMateria: "IDS323", calificacion: "A", puntos: 16 }, // 4 cr * 4
+          { claveMateria: "IDS323L", calificacion: "A", puntos: 4 }  // 1 cr * 4
+        ]
+      }
+    }
+  });
+
+  // Trimestre 2: 1 materia, 5 creditos, gpa 2.00
+  await prisma.trimestre.create({
+    data: {
+      periodo: "Febrero - Abril",
+      anio: 2026,
+      indiceTrimestral: 2.00,
+      indiceAcumulado: 3.60,
+      asignaturas: {
+        create: [
+          { claveMateria: "CBM102", calificacion: "C", puntos: 10 } // 5 cr * 2 = 10
+        ]
+      }
+    }
+  });
+
+  console.log("5. Creando Volante de Selección actual...");
+  await prisma.volanteSeleccion.create({
+    data: {
+      periodo: "Mayo - Julio 2026",
+      activo: true,
+      horarios: {
+        create: [
+          {
+            claveMateria: "CBM208", // Álgebra Lineal
+            profesor: "Eugenio Martinez",
+            dia: "Lunes y Miércoles",
+            horas: "10:00 AM - 12:00 PM",
+            aula: "Aula GC-313"
+          },
+          {
+            claveMateria: "IDS328", // Administración de Configuración
+            profesor: "Juan Perez",
+            dia: "Martes",
+            horas: "06:00 PM - 10:00 PM",
+            aula: "Aula VIRTUAL"
+          },
+          {
+            claveMateria: "IDS328L", // Lab. de Admin. Configuración
+            profesor: "Maria Fernandez",
+            dia: "Jueves",
+            horas: "04:00 PM - 06:00 PM",
+            aula: "Lab FD-411"
+          }
+        ]
+      }
+    }
+  });
+
+  console.log("¡Éxito! Data transaccional (Trimestres y Volante) cargada correctamente.");
 }
 
 main()
