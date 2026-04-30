@@ -4,8 +4,9 @@ async function obtenerVolanteActivo(req, res) {
   console.log("[VOLANTES] request received: obtenerVolanteActivo");
   try {
     const volante = await volanteService.obtenerVolanteActivo();
+    // Si no hay volante activo, devolvemos 200 con un objeto vacío para evitar errores 404 en el frontend
     if (!volante) {
-      return res.status(404).json({ message: 'No hay ningún volante de selección activo en este momento.' });
+      return res.status(200).json({});
     }
     return res.status(200).json(volante);
   } catch (error) {
