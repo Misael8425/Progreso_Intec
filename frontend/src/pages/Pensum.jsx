@@ -5,7 +5,7 @@ export default function Pensum() {
   const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/pensum', {
+    fetch(`${import.meta.env.VITE_API_URL}/api/pensum`, {
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         'Pragma': 'no-cache',

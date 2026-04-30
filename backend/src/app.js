@@ -24,7 +24,7 @@ app.use(cors({
 app.use(express.json());
 
 // Rutas base
-app.use('/api/simulaciones', indiceRoutes);
+app.use('/api/indice', indiceRoutes);
 app.use('/api/pensum', pensumRoutes);
 app.use('/api/trimestres', trimestreRoutes);
 app.use('/api/volantes', volanteRoutes);
