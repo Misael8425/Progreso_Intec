@@ -153,27 +153,58 @@ async function main() {
     { clave: "IDS357", nombre: "PROYECTO FINAL DE GRADO", creditos: 4, trimestreSugerido: 14 }
   ];
 
+  const cursando = ['CBM208', 'IDS328', 'IDS328L'];
+  const pendientes = ['CBM203', 'CBM305', 'INS380', 'INS380L', 'IDS330', 'IDS330L', 'IDS3X5'];
+
+  // Para llegar a un índice de ~3.60, asignaremos un 60% de A y 40% de B
+  let aCount = 0;
+  
   for (const m of pensumOficial) {
+    let estado = "Aprobada";
+    let calificacion = "A";
+
+    if (cursando.includes(m.clave)) {
+      estado = "Cursando";
+      calificacion = null;
+    } else if (pendientes.includes(m.clave)) {
+      estado = "Pendiente";
+      calificacion = null;
+    } else {
+      // Garantizar que la mayoría de las aprobadas tengan A y B para simular 3.60
+      // IDS345L obligatoriamente aprobada
+      if (m.clave === 'IDS345L') {
+        calificacion = 'A';
+      } else {
+        calificacion = aCount % 3 !== 0 ? 'A' : 'B'; // 2/3 son A, 1/3 son B (Aprox 3.66 index)
+        aCount++;
+      }
+    }
+
     await prisma.asignaturaPensum.upsert({
       where: { clave: m.clave },
-      // ¡EL FIX CLAVE ESTÁ AQUÍ! Forzamos actualizar NOMBRE y CREDITOS también.
       update: { 
         nombre: m.nombre, 
         creditos: m.creditos, 
-        trimestreSugerido: m.trimestreSugerido 
+        trimestreSugerido: m.trimestreSugerido,
+        estado: estado,
+        calificacion: calificacion
       },
       create: {
         clave: m.clave,
         nombre: m.nombre,
         creditos: m.creditos,
-        trimestreSugerido: m.trimestreSugerido
+        trimestreSugerido: m.trimestreSugerido,
+        estado: estado,
+        calificacion: calificacion
       }
     });
   }
 
-  console.log("¡Éxito! Pensum restaurado, corregido y limpio.");
+  console.log(`¡Éxito! Pensum de ${pensumOficial.length} materias cargado correctamente.`);
 }
 
 main()
   .catch((e) => console.error(e))
-  .finally(async () => await prisma.$disconnect());
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
