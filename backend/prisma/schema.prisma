@@ -40,7 +40,11 @@ model AsignaturaPensum {
 model Trimestre {
   id               String   @id @default(uuid())
   periodo          String
-  anio             Int
+  anio             Int?
+  estado           String   @default("CERRADO")
+  materiasAprobadas Int?    @default(0)
+  creditosAprobados Int?    @default(0)
+  gpa              Float?
   indiceTrimestral Float?
   indiceAcumulado  Float?
   createdAt        DateTime @default(now())
@@ -52,8 +56,11 @@ model AsignaturaCursada {
   id              String           @id @default(uuid())
   trimestreId     String
   claveMateria    String
-  calificacion    String
-  puntos          Float
+  calificacion    String?
+  puntos          Float?
+  profesor        String?
+  horario         String?
+  aula            String?
   trimestre       Trimestre        @relation(fields: [trimestreId], references: [id])
   asignaturaPensum AsignaturaPensum @relation(fields: [claveMateria], references: [clave])
 }
