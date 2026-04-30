@@ -8,7 +8,19 @@ const volanteRoutes = require('./routes/volante.routes');
 const app = express();
 
 // Middlewares
-app.use(cors());
+const allowedOrigins = process.env.NODE_ENV === 'production' 
+  ? ['https://tu-sitio-intec.netlify.app'] // URL de Netlify
+  : ['http://localhost:5173', 'http://127.0.0.1:5173']; // URLs de Vite local
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  }
+}));
 app.use(express.json());
 
 // Rutas base
