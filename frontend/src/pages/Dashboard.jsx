@@ -59,9 +59,13 @@ const Dashboard = () => {
   const { pensum, historial, volante } = data;
 
   // 1. Cálculos de Métricas
-  const trimestreReciente = historial[0];
-  // Si el backend no tiene indiceAcumulado, mostramos el trimestral del más reciente como fallback referencial.
-  const indiceActual = trimestreReciente?.indiceAcumulado || trimestreReciente?.indiceTrimestral || 0;
+  const trimestresDescendentes = [...historial].reverse();
+  const obtenerIndiceGeneral = (lista) => {
+    if (!lista || lista.length === 0) return "0.00";
+    const masReciente = lista[0]; // Ya invertido
+    return masReciente.indiceAcumulado ? masReciente.indiceAcumulado.toFixed(2) : "0.00";
+  };
+  const indiceGeneral = obtenerIndiceGeneral(trimestresDescendentes);
 
   const materiasAprobadasLista = pensum.filter(m => m.estado === 'Aprobada' || m.calificacion === 'CO' || m.calificacion === 'EI');
   const creditosAprobados = materiasAprobadasLista.reduce((acc, curr) => acc + curr.creditos, 0);
@@ -112,7 +116,7 @@ const Dashboard = () => {
             </div>
           </div>
           <div className="flex items-baseline gap-2 mb-2">
-            <p className="text-5xl font-extrabold text-white">{indiceActual.toFixed(2)}</p>
+            <p className="text-5xl font-extrabold text-white">{indiceGeneral}</p>
           </div>
           <p className="text-xs text-slate-400 mt-auto">Al trimestre más reciente</p>
         </div>
@@ -232,7 +236,7 @@ const Dashboard = () => {
           </div>
 
           <div className="flex flex-col gap-4">
-            {historial.slice(0, 3).map((trimestre, i) => {
+            {trimestresDescendentes.slice(0, 3).map((trimestre, i) => {
               const esActual = i === 0;
               const numMaterias = trimestre.asignaturas?.length || 0;
               const numCreditos = trimestre.asignaturas?.reduce((acc, asig) => acc + (asig.asignaturaPensum?.creditos || 0), 0) || 0;

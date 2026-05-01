@@ -1,36 +1,151 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { obtenerHistorialTrimestres } from '../services/api';
-import { Loader2, User, Clock, MapPin, TrendingUp, BookOpen } from 'lucide-react';
+import { Loader2, User, Clock, MapPin, BookOpen, ChevronDown } from 'lucide-react';
 
+// ─── Badge de calificación ────────────────────────────────────────────────────
+const CalifBadge = ({ calif }) => {
+  if (!calif) return null;
+  const colorMap = {
+    A: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
+    B: 'bg-sky-500/15 text-sky-400 border-sky-500/30',
+    C: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
+    D: 'bg-orange-500/15 text-orange-400 border-orange-500/30',
+    F: 'bg-rose-500/15 text-rose-400 border-rose-500/30',
+    R: 'bg-rose-500/15 text-rose-400 border-rose-500/30',
+    CO: 'bg-violet-500/15 text-violet-400 border-violet-500/30',
+    EI: 'bg-teal-500/15 text-teal-400 border-teal-500/30',
+  };
+  // Normaliza: "A+" → key "A", "B+" → "B", etc.
+  const key = calif.replace('+', '');
+  const cls = colorMap[key] || 'bg-slate-700/30 text-slate-400 border-slate-600/30';
+  return (
+    <span className={`text-xs font-black px-2 py-0.5 rounded border ${cls}`}>
+      {calif}
+    </span>
+  );
+};
+
+// ─── Tarjeta de asignatura ────────────────────────────────────────────────────
+const AsigCard = ({ asig }) => (
+  <div className="bg-slate-900/40 backdrop-blur-md border border-slate-800/60 shadow-xl shadow-black/20 rounded-xl overflow-hidden hover:border-cyan-500/30 transition-all duration-300 group">
+    <div className="bg-slate-950/50 border-b border-slate-800/60 p-4 flex justify-between items-start gap-2">
+      <div className="min-w-0">
+        <span className="text-xs font-bold text-cyan-500 bg-cyan-500/10 px-2 py-1 rounded-md tracking-wider">
+          {asig.claveMateria}
+        </span>
+        <h3 className="text-slate-100 font-bold text-sm mt-2 leading-tight line-clamp-2" title={asig.asignaturaPensum?.nombre || asig.nombre}>
+          {asig.asignaturaPensum?.nombre || asig.nombre || 'Asignatura'}
+        </h3>
+      </div>
+      <div className="flex flex-col items-end shrink-0">
+        <span className="text-[10px] text-slate-500 font-bold uppercase mb-1">Nota</span>
+        <CalifBadge calif={asig.calificacion} />
+      </div>
+    </div>
+    <div className="p-4 space-y-2.5">
+      <div className="flex items-start gap-3">
+        <div className="mt-0.5 bg-slate-800/50 p-1.5 rounded-md text-slate-400 shrink-0">
+          <User className="w-3.5 h-3.5" />
+        </div>
+        <div className="min-w-0">
+          <p className="text-[10px] text-slate-500 font-semibold uppercase">Profesor</p>
+          <p className="text-xs text-slate-300 truncate">{asig.profesor || 'Sin asignar'}</p>
+        </div>
+      </div>
+      <div className="flex items-start gap-3">
+        <div className="mt-0.5 bg-slate-800/50 p-1.5 rounded-md text-slate-400 shrink-0">
+          <Clock className="w-3.5 h-3.5" />
+        </div>
+        <div className="min-w-0">
+          <p className="text-[10px] text-slate-500 font-semibold uppercase">Horario</p>
+          <p className="text-xs text-slate-300">{asig.horario || 'Sin asignar'}</p>
+        </div>
+      </div>
+      <div className="flex items-start gap-3">
+        <div className="mt-0.5 bg-slate-800/50 p-1.5 rounded-md text-slate-400 shrink-0">
+          <MapPin className="w-3.5 h-3.5" />
+        </div>
+        <div className="min-w-0">
+          <p className="text-[10px] text-slate-500 font-semibold uppercase">Aula</p>
+          <p className="text-xs text-slate-300">{asig.aula || 'Sin asignar'}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// ─── Tarjeta de un trimestre completo ────────────────────────────────────────
+const TrimestreCard = ({ trimestre, numero }) => {
+  const esActivo = trimestre.estado === 'ACTIVO';
+  return (
+    <div className={`rounded-2xl border overflow-hidden transition-all duration-300 ${
+      esActivo
+        ? 'border-cyan-500/50 bg-cyan-950/10 shadow-lg shadow-cyan-900/20'
+        : 'border-slate-800/60 bg-slate-900/20'
+    }`}>
+      {/* Header del trimestre */}
+      <div className="p-5 border-b border-slate-800/60 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-black shrink-0 ${
+            esActivo ? 'bg-cyan-500/20 text-cyan-400' : 'bg-slate-800 text-slate-400'
+          }`}>
+            {numero}
+          </div>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="font-bold text-slate-100 text-base">{trimestre.periodo}</h3>
+              {esActivo && (
+                <span className="text-[10px] font-bold bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded border border-cyan-500/20 uppercase tracking-wider">
+                  En Curso
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-slate-500 mt-0.5">
+              {trimestre.asignaturas?.length || 0} materias registradas
+            </p>
+          </div>
+        </div>
+
+        {/* Métricas rápidas */}
+        <div className="flex items-center gap-4 sm:gap-6">
+          <div className="text-center">
+            <p className="text-[10px] text-slate-500 font-semibold uppercase">Créditos</p>
+            <p className="text-lg font-bold text-slate-200">{trimestre.creditosAprobados ?? 0}</p>
+          </div>
+          <div className="text-center">
+            <p className="text-[10px] text-slate-500 font-semibold uppercase">GPA</p>
+            <p className={`text-lg font-extrabold ${esActivo ? 'text-slate-500' : 'text-cyan-400'}`}>
+              {esActivo ? '—' : (trimestre.gpa ?? trimestre.indiceTrimestral ?? 0).toFixed(2)}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Grid de asignaturas */}
+      <div className="p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {trimestre.asignaturas?.length > 0
+          ? trimestre.asignaturas.map(asig => <AsigCard key={asig.id} asig={asig} />)
+          : <p className="text-slate-500 text-sm col-span-full text-center py-4">No hay asignaturas registradas.</p>
+        }
+      </div>
+    </div>
+  );
+};
+
+// ─── Página principal ─────────────────────────────────────────────────────────
 const Historial = () => {
-  const [historial, setHistorial] = useState([]);
-  const [trimestreSeleccionado, setTrimestreSeleccionado] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [historial, setHistorial]   = useState([]);
+  const [loading, setLoading]       = useState(true);
+  const [error, setError]           = useState(null);
+  // 'recientes' | 'todos' | <trimestre.id>
+  const [filtroActivo, setFiltroActivo] = useState('recientes');
 
   useEffect(() => {
     obtenerHistorialTrimestres()
       .then(data => {
         const list = Array.isArray(data) ? data : data.value || [];
-        // Ordenamos los trimestres de forma descendente (el más reciente primero)
-        const sortedList = list.sort((a, b) => {
-          // Asumimos que los más recientes tienen un ID o periodo posterior, pero
-          // lo más seguro es ordenarlos por el arreglo recibido invirtiéndolo si viene asc.
-          // Si el backend no los ordena, esto los invierte para mostrar los últimos primero
-          // En Prisma, los insertamos en orden cronológico (1 al 16), por lo que reverse() funciona.
-          return -1; 
-        }).reverse(); // Si ya vienen en desc por createdAt (como hicimos en Prisma desc), reverse los desordenará. 
-        // Mejor hacer un reverse() estático si el backend los manda en asc.
-        // Prisma tiene `orderBy: { createdAt: 'desc' }` en el servicio `obtenerHistorialVolantes`,
-        // pero en el controlador `trimestre.controller.js` no lo sabemos.
-        // Para estar seguros de que el Trimestre 16 es el primero, vamos a invertir el arreglo.
-        
-        // Forma segura: el backend de `obtenerHistorialTrimestres` los ordena por `createdAt: 'desc'`
-        // Así que el primero ya es el más reciente. No usamos sort() para no dañar el orden.
+        // Guardamos el array TAL COMO llega del backend (ascendente: T1→T16)
         setHistorial(list);
-        if (list.length > 0) {
-          setTrimestreSeleccionado(list[0].id); // Por defecto, seleccionar el más reciente
-        }
         setLoading(false);
       })
       .catch(err => {
@@ -39,17 +154,37 @@ const Historial = () => {
       });
   }, []);
 
+  // ─── Orden descendente: T16 en índice 0, T1 al final ───────────────────────
+  // IMPORTANTE: debe estar ANTES de cualquier early return para cumplir
+  // las Rules of Hooks (los hooks nunca pueden estar después de un return).
+  const trimestresDescendentes = useMemo(
+    () => [...historial].reverse(),
+    [historial]
+  );
+
+  // ─── Qué mostrar según el select ────────────────────────────────────────────
+  const trimestresAMostrar = useMemo(() => {
+    if (filtroActivo === 'todos')     return trimestresDescendentes;
+    if (filtroActivo === 'recientes') return trimestresDescendentes.slice(0, 3);
+    return trimestresDescendentes.filter(t => t.id === filtroActivo);
+  }, [trimestresDescendentes, filtroActivo]);
+
+  // ─── Early returns (SIEMPRE después de todos los hooks) ─────────────────────
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
         <Loader2 className="w-10 h-10 text-cyan-500 animate-spin mb-4" />
-        <p className="text-slate-400 font-medium animate-pulse">Cargando récord académico detallado...</p>
+        <p className="text-slate-400 font-medium animate-pulse">Cargando récord académico...</p>
       </div>
     );
   }
 
   if (error) {
-    return <div className="text-rose-400 text-center p-8 bg-rose-950/20 rounded-2xl border border-rose-900/50">{error}</div>;
+    return (
+      <div className="text-rose-400 text-center p-8 bg-rose-950/20 rounded-2xl border border-rose-900/50">
+        {error}
+      </div>
+    );
   }
 
   if (historial.length === 0) {
@@ -60,129 +195,69 @@ const Historial = () => {
     );
   }
 
-  // Buscar el trimestre seleccionado en el array
-  const trimestreData = historial.find(t => t.id === trimestreSeleccionado) || historial[0];
-
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full">
-      <header className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-4">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-2">
-            Mi Historial
-          </h1>
-          <p className="text-slate-400">Trazabilidad total de asignaturas cursadas.</p>
-        </div>
-        
-        {/* Selector de Trimestre */}
-        <div className="flex flex-col gap-2">
-          <label htmlFor="trimestreSelect" className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-            Seleccionar Trimestre
-          </label>
-          <select
-            id="trimestreSelect"
-            className="bg-slate-950 border border-slate-700 text-slate-200 rounded-lg py-2.5 px-4 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none w-full md:w-80 cursor-pointer"
-            value={trimestreSeleccionado || ''}
-            onChange={(e) => setTrimestreSeleccionado(e.target.value)}
-          >
-            {historial.map((t, i) => (
-              <option key={t.id} value={t.id}>
-                {t.estado === 'ACTIVO' ? '⭐ ' : ''}{t.periodo} {t.anio ? `(${t.anio})` : ''}
-              </option>
-            ))}
-          </select>
-        </div>
-      </header>
 
-      {/* Resumen del Trimestre Seleccionado */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-slate-900/40 backdrop-blur-md border border-slate-800/60 p-5 rounded-2xl flex flex-col items-center justify-center text-center">
-          <span className="text-slate-400 text-sm font-medium mb-1">Estado</span>
-          <span className={`text-xl font-bold ${trimestreData.estado === 'ACTIVO' ? 'text-cyan-400' : 'text-emerald-400'}`}>
-            {trimestreData.estado}
-          </span>
-        </div>
-        <div className="bg-slate-900/40 backdrop-blur-md border border-slate-800/60 p-5 rounded-2xl flex flex-col items-center justify-center text-center">
-          <span className="text-slate-400 text-sm font-medium mb-1">Aprobadas</span>
-          <span className="text-2xl font-bold text-slate-200">{trimestreData.materiasAprobadas || 0}</span>
-        </div>
-        <div className="bg-slate-900/40 backdrop-blur-md border border-slate-800/60 p-5 rounded-2xl flex flex-col items-center justify-center text-center">
-          <span className="text-slate-400 text-sm font-medium mb-1">Créditos</span>
-          <span className="text-2xl font-bold text-slate-200">{trimestreData.creditosAprobados || 0}</span>
-        </div>
-        <div className="bg-slate-900/40 backdrop-blur-md border border-slate-800/60 p-5 rounded-2xl flex flex-col items-center justify-center text-center relative overflow-hidden">
-          <div className="absolute -right-4 -bottom-4 opacity-5">
-            <TrendingUp className="w-24 h-24" />
+      {/* ── Header + Select ─────────────────────────────────────────────────── */}
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+        <header>
+          <h1 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-1">
+            Récord Oficial
+          </h1>
+          <p className="text-slate-400 text-sm">
+            Historial académico detallado · {historial.length} trimestres registrados
+          </p>
+        </header>
+
+        {/* ── Selector de trimestre (Glassmorphism) ── */}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="filtro-trimestre" className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+            Filtrar por trimestre
+          </label>
+          <div className="relative">
+            <select
+              id="filtro-trimestre"
+              value={filtroActivo}
+              onChange={e => setFiltroActivo(e.target.value)}
+              className="appearance-none bg-slate-900/60 backdrop-blur-md border border-slate-700/60 text-slate-200 rounded-xl py-2.5 pl-4 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 w-full md:w-72 cursor-pointer shadow-lg shadow-black/20 transition-colors hover:border-slate-600"
+            >
+              <optgroup label="Vista rápida">
+                <option value="recientes">⭐ Últimos 3 trimestres</option>
+                <option value="todos">📋 Ver historial completo</option>
+              </optgroup>
+              <optgroup label="Trimestre específico">
+                {trimestresDescendentes.map((t, index) => (
+                  <option key={t.id} value={t.id}>
+                    Trimestre {trimestresDescendentes.length - index}: {t.periodo}
+                  </option>
+                ))}
+              </optgroup>
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           </div>
-          <span className="text-slate-400 text-sm font-medium mb-1">GPA</span>
-          <span className="text-3xl font-extrabold text-cyan-400">{trimestreData.gpa?.toFixed(2) || '0.00'}</span>
         </div>
       </div>
 
-      {/* Cuadrícula de Asignaturas */}
-      <div className="mt-8">
-        <h2 className="text-xl font-bold text-slate-200 mb-6 flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-cyan-500" />
-          Materias Registradas ({trimestreData.asignaturas?.length || 0})
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {trimestreData.asignaturas?.map((asig) => (
-            <div key={asig.id} className="bg-slate-900/40 backdrop-blur-md border border-slate-800/60 shadow-xl shadow-black/20 rounded-xl overflow-hidden hover:border-cyan-500/30 transition-all duration-300">
-              
-              {/* Header de la Tarjeta */}
-              <div className="bg-slate-950/50 border-b border-slate-800/60 p-4 flex justify-between items-start">
-                <div>
-                  <span className="text-xs font-bold text-cyan-500 bg-cyan-500/10 px-2 py-1 rounded-md tracking-wider">
-                    {asig.claveMateria}
-                  </span>
-                  <h3 className="text-slate-100 font-bold text-base mt-2 leading-tight">
-                    {asig.asignaturaPensum?.nombre || asig.nombre || 'Asignatura Desconocida'}
-                  </h3>
-                </div>
-                {asig.calificacion && (
-                  <div className="flex flex-col items-end">
-                    <span className="text-[10px] text-slate-500 font-bold uppercase">Nota</span>
-                    <span className="text-lg font-black text-emerald-400">{asig.calificacion}</span>
-                  </div>
-                )}
-              </div>
+      {/* ── Contador de resultados ──────────────────────────────────────────── */}
+      {filtroActivo === 'recientes' && historial.length > 3 && (
+        <p className="text-xs text-slate-500 -mt-4">
+          Mostrando los 3 más recientes de {historial.length} · Usa el selector para ver el historial completo.
+        </p>
+      )}
 
-              {/* Body de la Tarjeta (Iconos Lucide) */}
-              <div className="p-4 space-y-3">
-                <div className="flex items-start gap-3">
-                  <div className="mt-0.5 bg-slate-800/50 p-1.5 rounded-md text-slate-400">
-                    <User className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500 font-semibold uppercase">Profesor</p>
-                    <p className="text-sm text-slate-300">{asig.profesor || 'Sin asignar'}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="mt-0.5 bg-slate-800/50 p-1.5 rounded-md text-slate-400">
-                    <Clock className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500 font-semibold uppercase">Horario</p>
-                    <p className="text-sm text-slate-300">{asig.horario || 'Sin asignar'}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="mt-0.5 bg-slate-800/50 p-1.5 rounded-md text-slate-400">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500 font-semibold uppercase">Aula</p>
-                    <p className="text-sm text-slate-300">{asig.aula || 'Sin asignar'}</p>
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-          ))}
-        </div>
+      {/* ── Lista de trimestres ─────────────────────────────────────────────── */}
+      <div className="space-y-8">
+        {trimestresAMostrar.map((trimestre, idx) => {
+          // Número del trimestre: el primero de la lista descendente es el más reciente (T16)
+          const numeroTrimestre = trimestresDescendentes.length - trimestresDescendentes.indexOf(trimestre);
+          return (
+            <TrimestreCard
+              key={trimestre.id}
+              trimestre={trimestre}
+              numero={numeroTrimestre}
+            />
+          );
+        })}
       </div>
     </div>
   );

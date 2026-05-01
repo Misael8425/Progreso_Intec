@@ -105,8 +105,7 @@ async function registrarTrimestre(data) {
 async function obtenerHistorial() {
   const trimestres = await prisma.trimestre.findMany({
     orderBy: [
-      { anio: 'desc' },
-      { createdAt: 'desc' }
+      { createdAt: 'asc' }
     ],
     include: {
       asignaturas: {

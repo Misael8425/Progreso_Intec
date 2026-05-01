@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { BookOpen, Clock, LayoutDashboard, Calculator, CalendarDays } from 'lucide-react';
+import { BookOpen, Clock, LayoutDashboard, Calculator, CalendarDays, Wallet } from 'lucide-react';
 
 const Navbar = () => {
   const linkClass = ({ isActive }) =>
@@ -42,6 +42,11 @@ const Navbar = () => {
           <NavLink to="/volante" className={linkClass}>
             <CalendarDays className="w-5 h-5 md:w-4 md:h-4" />
             <span className="text-[10px] md:text-sm font-medium">Mi Volante</span>
+          </NavLink>
+
+          <NavLink to="/finanzas" className={linkClass}>
+            <Wallet className="w-5 h-5 md:w-4 md:h-4" />
+            <span className="text-[10px] md:text-sm font-medium">Mis Finanzas</span>
           </NavLink>
         </div>
       </div>

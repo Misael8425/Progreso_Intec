@@ -172,7 +172,7 @@ async function main() {
 
   // Estado real según el récord (fuente de verdad: Record_Según_Pensum PDF)
   const cursando  = new Set(['CBM208', 'IDS328', 'IDS328L']);
-  const pendientes = new Set(['CBM203', 'CBM305', 'INS380', 'INS380L', 'IDS330', 'IDS330L', 'IDS3X5', 'ADM315', 'IDS354']);
+  const pendientes = new Set(['CBM203', 'CBM305', 'INS380', 'INS380L', 'IDS330', 'IDS330L', 'IDS3X5']);
   // CBM202 fue reprobada múltiples veces y aprobada con C en Feb-Abr 2026
   // ISE2E1 ya tiene nota (ING237 → A)
 
@@ -256,316 +256,240 @@ async function main() {
 
   const historial = [
     // ── T1: Agosto - Octubre 2022 ─────────────────────────────────────────────
-    // Aquí el récord muestra todas las CO/EI más las 3 materias reales cursadas
     {
-      periodo: "Agosto - Octubre 2022",
-      estado: "CERRADO",
-      creditosAprobados: 10,
-      gpa: 3.20,
-      indiceTrimestral: 3.20,
-      indiceAcumulado: 3.20,
+      periodo: "Agosto - Octubre 2022", estado: "CERRADO", creditosAprobados: 10,
+      gpa: 3.20, indiceTrimestral: 3.20, indiceAcumulado: 3.20,
       asignaturas: [
-        // Convalidadas (CO) — el sistema las registró en este trimestre
-        { clave: "CBF210",  calif: "CO", cr: 4,  pts: 0   },
-        { clave: "CBF210L", calif: "CO", cr: 1,  pts: 0   },
-        { clave: "CBM101",  calif: "CO", cr: 5,  pts: 0   },
-        { clave: "CBM102",  calif: "CO", cr: 5,  pts: 0   },
-        { clave: "CSH112",  calif: "CO", cr: 2,  pts: 0   },
-        { clave: "CSS102",  calif: "CO", cr: 2,  pts: 0   },
-        { clave: "EEE2X1",  calif: "CO", cr: 0,  pts: 0   },
-        { clave: "EEP3X1",  calif: "CO", cr: 0,  pts: 0   },
-        { clave: "IDS202",  calif: "CO", cr: 4,  pts: 0   },
-        { clave: "IDS202L", calif: "CO", cr: 1,  pts: 0   },
-        { clave: "IDS340",  calif: "CO", cr: 3,  pts: 0   },
-        { clave: "IDS340L", calif: "CO", cr: 1,  pts: 0   },
-        { clave: "IDS343",  calif: "CO", cr: 3,  pts: 0   },
-        { clave: "IDS343L", calif: "CO", cr: 1,  pts: 0   },
-        { clave: "ING102",  calif: "CO", cr: 2,  pts: 0   },
-        { clave: "ING102L", calif: "CO", cr: 0,  pts: 0   },
-        { clave: "SHI103",  calif: "EI", cr: 0,  pts: 0   },
-        { clave: "SHI104",  calif: "EI", cr: 0,  pts: 0   },
-        { clave: "SHI105",  calif: "EI", cr: 0,  pts: 0   },
-        // Materias reales cursadas este trimestre
-        { clave: "AHC109",  calif: "B",  cr: 4,  pts: 12  },
-        { clave: "AHQ101",  calif: "B",  cr: 4,  pts: 12  },
-        { clave: "IDS207",  calif: "A",  cr: 2,  pts: 8   },
+        { clave: "CBF210",  calif: "CO", cr: 4, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "CBF210L", calif: "CO", cr: 1, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "CBM101",  calif: "CO", cr: 5, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "CBM102",  calif: "CO", cr: 5, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "CSH112",  calif: "CO", cr: 2, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "CSS102",  calif: "CO", cr: 2, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "EEE2X1",  calif: "CO", cr: 0, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "EEP3X1",  calif: "CO", cr: 0, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "IDS202",  calif: "CO", cr: 4, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "IDS202L", calif: "CO", cr: 1, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "IDS340",  calif: "CO", cr: 3, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "IDS340L", calif: "CO", cr: 1, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "IDS343",  calif: "CO", cr: 3, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "IDS343L", calif: "CO", cr: 1, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "ING102",  calif: "CO", cr: 2, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "ING102L", calif: "CO", cr: 0, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "SHI103",  calif: "EI", cr: 0, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "SHI104",  calif: "EI", cr: 0, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "SHI105",  calif: "EI", cr: 0, pts: 0, profesor: null, horario: null, aula: null },
+        { clave: "AHC109",  calif: "B",  cr: 4, pts: 12, profesor: "Carlos Enrique Cabrera Garcia", horario: "Lun/Mier 09-11", aula: "GC302" },
+        { clave: "AHQ101",  calif: "B",  cr: 4, pts: 12, profesor: "Lourdes Fernand Meyreles Vicioso", horario: "Mar/Jue 14-16", aula: "GC203" },
+        { clave: "IDS207",  calif: "A",  cr: 2, pts: 8, profesor: "Osvaldo Antonio Mota De La Cruz", horario: "Lun 08-10", aula: "GC202" },
       ]
     },
 
     // ── T2: Noviembre 2022 - Enero 2023 ─────────────────────────────────────
     {
-      periodo: "Noviembre 2022 - Enero 2023",
-      estado: "CERRADO",
-      creditosAprobados: 23,
-      gpa: 3.35,
-      indiceTrimestral: 3.35,
-      indiceAcumulado: 3.30,
+      periodo: "Noviembre 2022 - Enero 2023", estado: "CERRADO", creditosAprobados: 23,
+      gpa: 3.35, indiceTrimestral: 3.35, indiceAcumulado: 3.30,
       asignaturas: [
-        { clave: "AHC110",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "AHO102",  calif: "A",  cr: 0,  pts: 0   },
-        // EAA1X1 cursada como ASM104 (Vida Saludable)
-        { clave: "EAA1X1",  calif: "B+", cr: 2,  pts: 7   },
-        // EAA1X2 cursada como ASM107 (Nutrición Saludable)
-        { clave: "EAA1X2",  calif: "C",  cr: 2,  pts: 4   },
-        // EAA1X3 cursada como CBA106 (Ambiente y Cultura)
-        { clave: "EAA1X3",  calif: "A",  cr: 2,  pts: 8   },
-        { clave: "CBM201",  calif: "C",  cr: 5,  pts: 10  },
-        { clave: "IDS323",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "IDS323L", calif: "A",  cr: 1,  pts: 4   },
-        { clave: "ING228",  calif: "A",  cr: 1,  pts: 4   },
-        // EAA1X4 cursada como NEG101 (Inteligencia Financiera)
-        { clave: "EAA1X4",  calif: "A",  cr: 2,  pts: 8   },
+        { clave: "AHC110",  calif: "A",  cr: 4, pts: 16, profesor: "Maritza Cecilia Franco Rodriguez", horario: "Mar/Jue 16-18", aula: "GC213" },
+        { clave: "AHO102",  calif: "A",  cr: 0, pts: 0, profesor: "Alfonso Jiménez Vargas", horario: "Virtual", aula: "VIRTU" },
+        { clave: "EAA1X1",  calif: "B+", cr: 2, pts: 7, profesor: "Priscilla Nicols Sepúlveda Doñé", horario: "Mier 12-14", aula: "VIRTU" },
+        { clave: "EAA1X2",  calif: "C",  cr: 2, pts: 4, profesor: "Yudelka Maribel Ramirez Carrasco", horario: "Jue 14-16", aula: "VIRTU" },
+        { clave: "EAA1X3",  calif: "A",  cr: 2, pts: 8, profesor: "Jeanette Martina Chaljub Hasbun", horario: "Mier 11-13", aula: "GC213" },
+        { clave: "CBM201",  calif: "C",  cr: 5, pts: 10, profesor: "Luis Francisco Javier Figueroa Pérez", horario: "Mar/Jue 20-22, Vier 21-22", aula: "GC204/VIRTU" },
+        { clave: "IDS323",  calif: "A",  cr: 4, pts: 16, profesor: "Francia Odalis Mejia Polanco", horario: "Mier 11-13", aula: "ER302" },
+        { clave: "IDS323L", calif: "A",  cr: 1, pts: 4, profesor: "Francia Odalis Mejia Polanco", horario: "Vier 11-13", aula: "FD412" },
+        { clave: "ING228",  calif: "A",  cr: 1, pts: 4, profesor: "Delia Virginia Delgado Giménez", horario: "Sáb 18-21", aula: "VIRTU" },
+        { clave: "EAA1X4",  calif: "A",  cr: 2, pts: 8, profesor: "Julyanix Ramirez Paulino", horario: "Mar 20-21", aula: "VIRTU" },
       ]
     },
 
     // ── T3: Febrero - Abril 2023 ─────────────────────────────────────────────
     {
-      periodo: "Febrero - Abril 2023",
-      estado: "CERRADO",
-      creditosAprobados: 8,
-      gpa: 4.00,
-      indiceTrimestral: 4.00,
-      indiceAcumulado: 3.44,
+      periodo: "Febrero - Abril 2023", estado: "CERRADO", creditosAprobados: 8,
+      gpa: 4.00, indiceTrimestral: 4.00, indiceAcumulado: 3.44,
       asignaturas: [
-        { clave: "IDS208",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "IDS341",  calif: "A",  cr: 3,  pts: 12  },
-        { clave: "IDS341L", calif: "A",  cr: 1,  pts: 4   },
-        { clave: "IDS342",  calif: "A",  cr: 0,  pts: 0   },
-        { clave: "SHI106",  calif: "A",  cr: 0,  pts: 0   },
+        { clave: "IDS208",  calif: "A",  cr: 4, pts: 16, profesor: "Jacqueline Josefina Vega De La Rosa", horario: "Lun 09-12", aula: "GC215" },
+        { clave: "IDS341",  calif: "A",  cr: 3, pts: 12, profesor: "Buenaventura Pérez De Los Santos", horario: "Lun 09-12", aula: "GC212" },
+        { clave: "IDS341L", calif: "A",  cr: 1, pts: 4, profesor: "Buenaventura Pérez De Los Santos", horario: "Mier 17-19", aula: "FD405" },
+        { clave: "IDS342",  calif: "A",  cr: 0, pts: 0, profesor: "Jesús Nicolás Mejia Ortiz", horario: "Mar 14-16", aula: "GC212" },
+        { clave: "SHI106",  calif: "A",  cr: 0, pts: 0, profesor: "Juan Manuel Gautier Jorge", horario: "Virtual", aula: "VIRTU" },
       ]
     },
 
     // ── T4: Mayo - Julio 2023 ────────────────────────────────────────────────
     {
-      periodo: "Mayo - Julio 2023",
-      estado: "CERRADO",
-      creditosAprobados: 10,
-      gpa: 3.90,
-      indiceTrimestral: 3.90,
-      indiceAcumulado: 3.53,
+      periodo: "Mayo - Julio 2023", estado: "CERRADO", creditosAprobados: 10,
+      gpa: 3.90, indiceTrimestral: 3.90, indiceAcumulado: 3.53,
       asignaturas: [
-        { clave: "CBF211",  calif: "R",  cr: 4,  pts: 0   }, // Reprobada (R)
-        { clave: "CBF211L", calif: "B",  cr: 1,  pts: 3   },
-        { clave: "CSH105",  calif: "A",  cr: 2,  pts: 8   },
-        { clave: "CSH113",  calif: "A",  cr: 2,  pts: 8   },
-        { clave: "IDS324",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "IDS324L", calif: "A",  cr: 1,  pts: 4   },
-        { clave: "SHI107",  calif: "A",  cr: 0,  pts: 0   },
+        { clave: "CBF211",  calif: "R",  cr: 4, pts: 0, profesor: "Maria Dolores Durruthy Rodriguez", horario: "Lun/Mier 09-11", aula: "AH415" },
+        { clave: "CBF211L", calif: "B",  cr: 1, pts: 3, profesor: "Héctor Ramón Lee Contreras", horario: "Mier 14-16", aula: "F202B" },
+        { clave: "CSH105",  calif: "A",  cr: 2, pts: 8, profesor: "José Ramón Suriel Fernández", horario: "Virtual", aula: "VIRTU" },
+        { clave: "CSH113",  calif: "A",  cr: 2, pts: 8, profesor: "Carolina Estefanía Pérez Puerta", horario: "Mar 11-13", aula: "GC212" },
+        { clave: "IDS324",  calif: "A",  cr: 4, pts: 16, profesor: "Disneidis De Oleo Veriguete", horario: "Mar/Jue 20-22", aula: "GC204" },
+        { clave: "IDS324L", calif: "A",  cr: 1, pts: 4, profesor: "Disneidis De Oleo Veriguete", horario: "Mier 14-16", aula: "GC203" },
+        { clave: "SHI107",  calif: "A",  cr: 0, pts: 0, profesor: "Mónica Patricia Martinez Cudriz", horario: "Virtual", aula: "VIRTU" },
       ]
     },
 
     // ── T5: Agosto - Octubre 2023 ────────────────────────────────────────────
     {
-      periodo: "Agosto - Octubre 2023",
-      estado: "CERRADO",
-      creditosAprobados: 17,
-      gpa: 3.82,
-      indiceTrimestral: 3.82,
-      indiceAcumulado: 3.60,
+      periodo: "Agosto - Octubre 2023", estado: "CERRADO", creditosAprobados: 17,
+      gpa: 3.82, indiceTrimestral: 3.82, indiceAcumulado: 3.60,
       asignaturas: [
-        { clave: "IDS329",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "IDS329L", calif: "A",  cr: 1,  pts: 4   },
-        { clave: "IDS344",  calif: "A",  cr: 3,  pts: 12  },
-        { clave: "IDS344L", calif: "A",  cr: 1,  pts: 4   },
-        { clave: "IDS346",  calif: "A",  cr: 3,  pts: 12  },
-        { clave: "INS377",  calif: "B+", cr: 4,  pts: 14  },
-        { clave: "INS377L", calif: "B",  cr: 1,  pts: 3   },
+        { clave: "IDS329",  calif: "A",  cr: 4, pts: 16, profesor: "Marcos Miguel Brito Pascal", horario: "Mar 14-16", aula: "EL304/VIRTU" },
+        { clave: "IDS329L", calif: "A",  cr: 1, pts: 4, profesor: "Marcos Miguel Brito Pascal", horario: "Mar 16-18", aula: "FD412/VIRTU" },
+        { clave: "IDS344",  calif: "A",  cr: 3, pts: 12, profesor: "Casimiro Gilberto Cordero Ramirez", horario: "Jue 17-20", aula: "DP301" },
+        { clave: "IDS344L", calif: "A",  cr: 1, pts: 4, profesor: "Casimiro Gilberto Cordero Ramírez", horario: "Jue 20-22", aula: "GC211/VIRTU" },
+        { clave: "IDS346",  calif: "A",  cr: 3, pts: 12, profesor: "Edwin Felipe López Jiménez", horario: "Lun 09-12", aula: "GC303" },
+        { clave: "INS377",  calif: "B+", cr: 4, pts: 14, profesor: "Fausto Rafael Richardson Hernández", horario: "Mar/Jue 18-20", aula: "AJ302/AJ401" },
+        { clave: "INS377L", calif: "B",  cr: 1, pts: 3, profesor: "Fausto Rafael Richardson Hernández", horario: "Mar 20-22", aula: "FD403/VIRTU" },
       ]
     },
 
     // ── T6: Noviembre 2023 - Enero 2024 ─────────────────────────────────────
     {
-      periodo: "Noviembre 2023 - Enero 2024",
-      estado: "CERRADO",
-      creditosAprobados: 15,
-      gpa: 4.00,
-      indiceTrimestral: 4.00,
-      indiceAcumulado: 3.68,
+      periodo: "Noviembre 2023 - Enero 2024", estado: "CERRADO", creditosAprobados: 15,
+      gpa: 4.00, indiceTrimestral: 4.00, indiceAcumulado: 3.68,
       asignaturas: [
-        { clave: "CBF211",  calif: "A",  cr: 4,  pts: 16  }, // 2do intento → aprobada
-        { clave: "IDS345",  calif: "A",  cr: 3,  pts: 12  },
-        { clave: "IDS345L", calif: "A",  cr: 1,  pts: 4   },
-        { clave: "IDS350",  calif: "A",  cr: 0,  pts: 0   },
-        { clave: "ING214",  calif: "A",  cr: 4,  pts: 16  },
-        // ISE2E1 cursada como ING237 (Impacto Social)
-        { clave: "ISE2E1",  calif: "A",  cr: 4,  pts: 16  },
+        { clave: "CBF211",  calif: "A",  cr: 4, pts: 16, profesor: "Roberto Antonio Quiñones", horario: "Lun/Mier 11-13", aula: "GC312" },
+        { clave: "IDS345",  calif: "A",  cr: 3, pts: 12, profesor: "Carlos Rafael Méndez Comas", horario: "Lun/Mier 18-20", aula: "DP304/AJ302" },
+        { clave: "IDS345L", calif: "A",  cr: 1, pts: 4, profesor: "Carlos Rafael Méndez Comas", horario: "Lun 20-22, Mar 15-16", aula: "GC303/VIRTU" },
+        { clave: "IDS350",  calif: "A",  cr: 0, pts: 0, profesor: "Edwin Felipe López Jiménez", horario: "Lun 18-20", aula: "GC212" },
+        { clave: "ING214",  calif: "A",  cr: 4, pts: 16, profesor: "Cristóbal Alexis Durán Jorrin", horario: "Mar/Jue 14-16", aula: "FD405" },
+        { clave: "ISE2E1",  calif: "A",  cr: 4, pts: 16, profesor: "Omar Alejandro Guerra Alfonzo", horario: "Lun 09-13", aula: "AJ403" },
       ]
     },
 
     // ── T7: Febrero - Abril 2024 ─────────────────────────────────────────────
     {
-      periodo: "Febrero - Abril 2024",
-      estado: "CERRADO",
-      creditosAprobados: 22,
-      gpa: 3.32,
-      indiceTrimestral: 3.32,
-      indiceAcumulado: 3.60,
+      periodo: "Febrero - Abril 2024", estado: "CERRADO", creditosAprobados: 22,
+      gpa: 3.32, indiceTrimestral: 3.32, indiceAcumulado: 3.60,
       asignaturas: [
-        // CBA1X3 cursada como CBA103 (Gestión Ambiental)
-        { clave: "CBA1X3",  calif: "A",  cr: 2,  pts: 8   },
-        { clave: "CBM202",  calif: "D",  cr: 5,  pts: 5   }, // 1er intento → D
-        // EEE2X2 cursada como CSG210 (Derechos Humanos)
-        { clave: "EEE2X2",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "IDS335",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "IDS347",  calif: "A",  cr: 3,  pts: 12  },
-        { clave: "IDS347L", calif: "A",  cr: 1,  pts: 4   },
-        { clave: "ING231",  calif: "A",  cr: 3,  pts: 12  },
+        { clave: "CBA1X3",  calif: "A",  cr: 2, pts: 8, profesor: "David De Jesús Arias Canela", horario: "Jue 16-18", aula: "GC211" },
+        { clave: "CBM202",  calif: "D",  cr: 5, pts: 5, profesor: "Ignacio Antonio Almonte Mora", horario: "Lun/Mier 09-11, Vier 10-11", aula: "EL304/VIRTU" },
+        { clave: "EEE2X2",  calif: "A",  cr: 4, pts: 16, profesor: "Hipólito Catedral Diaz", horario: "Mar/Jue 18-20", aula: "GC302" },
+        { clave: "IDS335",  calif: "A",  cr: 4, pts: 16, profesor: "Mario Antonio Luciano Recio", horario: "Lun 11-15", aula: "GC314" },
+        { clave: "IDS347",  calif: "A",  cr: 3, pts: 12, profesor: "Lorenzo Solano Martinez", horario: "Lun 15-18", aula: "VIRTU" },
+        { clave: "IDS347L", calif: "A",  cr: 1, pts: 4, profesor: "Lorenzo Solano Martinez", horario: "Lun 18-21", aula: "VIRTU" },
+        { clave: "ING231",  calif: "A",  cr: 3, pts: 12, profesor: "Oscar Ali Corona Salazar", horario: "Lun 12-15", aula: "FD412" },
       ]
     },
 
     // ── T8: Mayo - Julio 2024 ────────────────────────────────────────────────
     {
-      periodo: "Mayo - Julio 2024",
-      estado: "CERRADO",
-      creditosAprobados: 19,
-      gpa: 3.79,
-      indiceTrimestral: 3.79,
-      indiceAcumulado: 3.63,
+      periodo: "Mayo - Julio 2024", estado: "CERRADO", creditosAprobados: 19,
+      gpa: 3.79, indiceTrimestral: 3.79, indiceAcumulado: 3.63,
       asignaturas: [
-        { clave: "IDS303",  calif: "A",  cr: 2,  pts: 8   },
-        { clave: "IDS309",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "IDS325",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "IDS325L", calif: "A",  cr: 1,  pts: 4   },
-        { clave: "IEC208",  calif: "A",  cr: 3,  pts: 12  },
-        { clave: "IEC208L", calif: "A",  cr: 1,  pts: 4   },
-        { clave: "ING230",  calif: "B",  cr: 4,  pts: 12  },
-        { clave: "SHI108",  calif: "A",  cr: 0,  pts: 0   },
+        { clave: "IDS303",  calif: "A",  cr: 2, pts: 8, profesor: "Osvaldo Antonio Mota De La Cruz", horario: "Mar 11-13", aula: "EL201" },
+        { clave: "IDS309",  calif: "A",  cr: 4, pts: 16, profesor: "Mario Antonio Luciano Recio", horario: "Mar/Jue 16-18", aula: "EP202" },
+        { clave: "IDS325",  calif: "A",  cr: 4, pts: 16, profesor: "Francia Odalis Mejia Polanco", horario: "Mar/Jue 12-14", aula: "EL304/VIRTU" },
+        { clave: "IDS325L", calif: "A",  cr: 1, pts: 4, profesor: "N/A", horario: "Sáb 18-21", aula: "ER302" },
+        { clave: "IEC208",  calif: "A",  cr: 3, pts: 12, profesor: "Baldo Alberto Dalporto", horario: "Lun 09-12", aula: "GC303" },
+        { clave: "IEC208L", calif: "A",  cr: 1, pts: 4, profesor: "Baldo Alberto Dalporto", horario: "Mier 16-18", aula: "FD201" },
+        { clave: "ING230",  calif: "B",  cr: 4, pts: 12, profesor: "Freddy Florian Lara Felipe", horario: "Mar/Jue 14-16", aula: "EL204" },
+        { clave: "SHI108",  calif: "A",  cr: 0, pts: 0, profesor: "Edwin De Jesús Gil Javier", horario: "Lun 07-09", aula: "DP304/VIRTU" },
       ]
     },
 
     // ── T9: Agosto - Octubre 2024 ────────────────────────────────────────────
     {
-      periodo: "Agosto - Octubre 2024",
-      estado: "CERRADO",
-      creditosAprobados: 19,
-      gpa: 2.95,
-      indiceTrimestral: 2.95,
-      indiceAcumulado: 3.54,
+      periodo: "Agosto - Octubre 2024", estado: "CERRADO", creditosAprobados: 19,
+      gpa: 2.95, indiceTrimestral: 2.95, indiceAcumulado: 3.54,
       asignaturas: [
-        // EEP3X2 cursada como ADM337 (Derecho Comercial)
-        { clave: "EEP3X2",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "CBM202",  calif: "F",  cr: 5,  pts: 0   }, // 2do intento → F
-        { clave: "IDS326",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "IDS326L", calif: "A",  cr: 1,  pts: 4   },
-        { clave: "ING235",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "ING235L", calif: "A",  cr: 1,  pts: 4   },
+        { clave: "EEP3X2",  calif: "A",  cr: 4, pts: 16, profesor: "Yocasta Del Ros Matias Almánzar", horario: "Mar/Jue 20-22", aula: "EL404/VIRTU" },
+        { clave: "CBM202",  calif: "F",  cr: 5, pts: 0, profesor: "Juan Manuel Tersek Suárez", horario: "Mar/Jue 14-16, Vier 14-15", aula: "AJ402/VIRTU" },
+        { clave: "IDS326",  calif: "A",  cr: 4, pts: 16, profesor: "Okelarys Sánchez Soto", horario: "Lun 18-20, Mier 20-22", aula: "VIRTU/AJ103" },
+        { clave: "IDS326L", calif: "A",  cr: 1, pts: 4, profesor: "Okelarys Sánchez Soto", horario: "Lun 13-14, Mier 20-22", aula: "VIRTU/FD405" },
+        { clave: "ING235",  calif: "A",  cr: 4, pts: 16, profesor: "Joel Francis Jiménez Báez", horario: "Lun 09-13", aula: "GC315" },
+        { clave: "ING235L", calif: "A",  cr: 1, pts: 4, profesor: "Joel Francis Jiménez Báez", horario: "Lun 15-18", aula: "FD411" },
       ]
     },
 
     // ── T10: Noviembre 2024 - Enero 2025 ────────────────────────────────────
     {
-      periodo: "Noviembre 2024 - Enero 2025",
-      estado: "CERRADO",
-      creditosAprobados: 14,
-      gpa: 4.00,
-      indiceTrimestral: 4.00,
-      indiceAcumulado: 3.58,
+      periodo: "Noviembre 2024 - Enero 2025", estado: "CERRADO", creditosAprobados: 14,
+      gpa: 4.00, indiceTrimestral: 4.00, indiceAcumulado: 3.58,
       asignaturas: [
-        { clave: "IDS311",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "IDS348",  calif: "A",  cr: 3,  pts: 12  },
-        { clave: "IDS348L", calif: "A",  cr: 1,  pts: 4   },
-        { clave: "IDS353",  calif: "A",  cr: 2,  pts: 8   },
-        { clave: "INS371",  calif: "A",  cr: 3,  pts: 12  },
-        { clave: "INS371L", calif: "A",  cr: 1,  pts: 4   },
+        { clave: "IDS311",  calif: "A",  cr: 4, pts: 16, profesor: "Jeannine Joselyn Hernández Lebreault", horario: "Lun 18-22", aula: "EP201" },
+        { clave: "IDS348",  calif: "A",  cr: 3, pts: 12, profesor: "Santos Leonardo Ramos Medina", horario: "Jue 16-19", aula: "GC215" },
+        { clave: "IDS348L", calif: "A",  cr: 1, pts: 4, profesor: "Santos Leonardo Ramos Medina", horario: "Jue 19-22", aula: "GC304" },
+        { clave: "IDS353",  calif: "A",  cr: 2, pts: 8, profesor: "Jacqueline Josefina Vega De La Rosa", horario: "Mier 12-14", aula: "VIRTU" },
+        { clave: "INS371",  calif: "A",  cr: 3, pts: 12, profesor: "Edwin Emil Pérez Arias", horario: "Lun 09-12", aula: "AJ303" },
+        { clave: "INS371L", calif: "A",  cr: 1, pts: 4, profesor: "Edwin Emil Pérez Arias", horario: "Mier 17-20", aula: "FD412" },
       ]
     },
 
     // ── T11: Febrero - Abril 2025 ────────────────────────────────────────────
     {
-      periodo: "Febrero - Abril 2025",
-      estado: "CERRADO",
-      creditosAprobados: 14,
-      gpa: 4.00,
-      indiceTrimestral: 4.00,
-      indiceAcumulado: 3.62,
+      periodo: "Febrero - Abril 2025", estado: "CERRADO", creditosAprobados: 14,
+      gpa: 4.00, indiceTrimestral: 4.00, indiceAcumulado: 3.62,
       asignaturas: [
-        { clave: "CON213",  calif: "A",  cr: 2,  pts: 8   },
-        { clave: "IDS349",  calif: "A",  cr: 3,  pts: 12  },
-        { clave: "IDS349L", calif: "A",  cr: 1,  pts: 4   },
-        { clave: "IDS351",  calif: "A",  cr: 2,  pts: 8   },
-        { clave: "IDS352",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "IDS356",  calif: "A",  cr: 2,  pts: 8   },
+        { clave: "CON213",  calif: "A",  cr: 2, pts: 8, profesor: "Carmen Elia Concepción Quiñonez", horario: "Jue 16-17", aula: "VIRTU" },
+        { clave: "IDS349",  calif: "A",  cr: 3, pts: 12, profesor: "Buenaventura Pérez De Los Santos", horario: "Jue 16-19", aula: "AJ404" },
+        { clave: "IDS349L", calif: "A",  cr: 1, pts: 4, profesor: "Buenaventura Pérez De Los Santos", horario: "Jue 19-22", aula: "FD405" },
+        { clave: "IDS351",  calif: "A",  cr: 2, pts: 8, profesor: "José Anibal Ventura Robles", horario: "Mier 18-20", aula: "ER202" },
+        { clave: "IDS352",  calif: "A",  cr: 4, pts: 16, profesor: "Edwin Felipe López Jiménez", horario: "Mier 18-22", aula: "DP401" },
+        { clave: "IDS356",  calif: "A",  cr: 2, pts: 8, profesor: "Jacqueline Josefina Vega De La Rosa", horario: "Mier 12-14", aula: "VIRTU" },
       ]
     },
 
     // ── T12: Mayo - Julio 2025 ───────────────────────────────────────────────
     {
-      periodo: "Mayo - Julio 2025",
-      estado: "CERRADO",
-      creditosAprobados: 22,
-      gpa: 3.32,
-      indiceTrimestral: 3.32,
-      indiceAcumulado: 3.58,
+      periodo: "Mayo - Julio 2025", estado: "CERRADO", creditosAprobados: 22,
+      gpa: 3.32, indiceTrimestral: 3.32, indiceAcumulado: 3.58,
       asignaturas: [
-        { clave: "CBM202",  calif: "D",  cr: 5,  pts: 5   }, // 3er intento → D
-        { clave: "IDS322",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "IDS334",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "IDS355",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "INS373",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "INS373L", calif: "A",  cr: 1,  pts: 4   },
+        { clave: "CBM202",  calif: "D",  cr: 5, pts: 5, profesor: "Ramón Antonio Ramírez Leonardo", horario: "Lun/Mier 07-09, Vier 07-08", aula: "GC204/VIRTU" },
+        { clave: "IDS322",  calif: "A",  cr: 4, pts: 16, profesor: null, horario: null, aula: null }, // Mantenimiento (Datos no en el corte de PDF)
+        { clave: "IDS334",  calif: "A",  cr: 4, pts: 16, profesor: "Yris Esther Brito Ruiz", horario: "Mar/Jue 16-18", aula: "EL304/VIRTU" },
+        { clave: "IDS355",  calif: "A",  cr: 4, pts: 16, profesor: "Edwin Felipe López Jiménez", horario: "Mier 18-22", aula: "TESISVIR/TU" },
+        { clave: "INS373",  calif: "A",  cr: 4, pts: 16, profesor: "Edwin Emil Pérez Arias", horario: "Mar/Jue 20-22", aula: "AJ204" },
+        { clave: "INS373L", calif: "A",  cr: 1, pts: 4, profesor: "Edwin Emil Pérez Arias", horario: "Lun 17-18, Mar 18-20", aula: "VIRTU/GC202" },
       ]
     },
 
     // ── T13: Agosto - Octubre 2025 ───────────────────────────────────────────
     {
-      periodo: "Agosto - Octubre 2025",
-      estado: "CERRADO",
-      creditosAprobados: 20,
-      gpa: 4.00,
-      indiceTrimestral: 4.00,
-      indiceAcumulado: 3.62,
+      periodo: "Agosto - Octubre 2025", estado: "CERRADO", creditosAprobados: 20,
+      gpa: 4.00, indiceTrimestral: 4.00, indiceAcumulado: 3.62,
       asignaturas: [
-        { clave: "ECO322",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "ICS202",  calif: "A",  cr: 4,  pts: 16  },
-        { clave: "ICS202L", calif: "A",  cr: 1,  pts: 4   },
-        { clave: "IDS339",  calif: "A",  cr: 3,  pts: 12  },
-        { clave: "IDS357",  calif: "A",  cr: 4,  pts: 16  },
-        // EEP3X3 cursada como INS369 (Inteligencia de Negocios)
-        { clave: "EEP3X3",  calif: "A",  cr: 4,  pts: 16  },
+        { clave: "ECO322",  calif: "A",  cr: 4, pts: 16, profesor: "Dilcia Margarita Matos Sánchez", horario: "Mar/Jue 16-18", aula: "AJ102" },
+        { clave: "ICS202",  calif: "A",  cr: 4, pts: 16, profesor: "Anthony Cruz Marte", horario: "Lun/Mier 07-09", aula: "VIRTU" },
+        { clave: "ICS202L", calif: "A",  cr: 1, pts: 4, profesor: "Anthony Cruz Marte", horario: "Mier 08-11", aula: "VIRTU" },
+        { clave: "IDS339",  calif: "A",  cr: 3, pts: 12, profesor: "Gabriel Elivan Villalona Eusebio", horario: "Mier 18-21", aula: "GC314" },
+        { clave: "IDS357",  calif: "A",  cr: 4, pts: 16, profesor: "Edwin Felipe López Jiménez", horario: "Mier 18-22", aula: "NPRES" },
+        { clave: "EEP3X3",  calif: "A",  cr: 4, pts: 16, profesor: "Pavel Amaury Hernández Contreras", horario: "Mier 18-22", aula: "VIRTU" },
       ]
     },
 
     // ── T14: Noviembre 2025 - Enero 2026 ────────────────────────────────────
     {
-      periodo: "Noviembre 2025 - Enero 2026",
-      estado: "CERRADO",
-      creditosAprobados: 9,
-      gpa: 3.89,
-      indiceTrimestral: 3.89,
-      indiceAcumulado: 3.63,
+      periodo: "Noviembre 2025 - Enero 2026", estado: "CERRADO", creditosAprobados: 9,
+      gpa: 3.89, indiceTrimestral: 3.89, indiceAcumulado: 3.63,
       asignaturas: [
-        { clave: "ADM315",  calif: "A",  cr: 4,  pts: 15  },
-        { clave: "CBM202",  calif: "R",  cr: 5,  pts: 0   }, // 4to intento → R
-        { clave: "ICS320",  calif: "A+", cr: 2,  pts: 8   },
-        { clave: "IDS354",  calif: "A+", cr: 3,  pts: 12  },
+        { clave: "ADM315",  calif: "A",  cr: 4, pts: 15, profesor: "Ingrid Marisol González Díaz", horario: "Virtual", aula: "VIRTU" },
+        { clave: "CBM202",  calif: "R",  cr: 5, pts: 0, profesor: "Juan Manuel Tersek Suárez", horario: "Mar/Jue 14-16, Vier 14-15", aula: "GC202/VIRTU" },
+        { clave: "ICS320",  calif: "A+", cr: 2, pts: 8, profesor: "Niurka Del Carmen Hernández González", horario: "Lun 07-09", aula: "EL404" },
+        { clave: "IDS354",  calif: "A+", cr: 3, pts: 12, profesor: "Pedro José Ramirez Rodriguez", horario: "Lun 07-10", aula: "VIRTU" },
       ]
     },
 
     // ── T15: Febrero - Abril 2026 ────────────────────────────────────────────
     {
-      periodo: "Febrero - Abril 2026",
-      estado: "CERRADO",
-      creditosAprobados: 5,
-      gpa: 2.00,
-      indiceTrimestral: 2.00,
-      indiceAcumulado: 3.60,
+      periodo: "Febrero - Abril 2026", estado: "CERRADO", creditosAprobados: 5,
+      gpa: 2.00, indiceTrimestral: 2.00, indiceAcumulado: 3.60,
       asignaturas: [
-        { clave: "CBM202",  calif: "C",  cr: 5,  pts: 10  }, // 5to intento → C ✅
+        { clave: "CBM202",  calif: "C",  cr: 5, pts: 10, profesor: "Ignacio Antonio Almonte Mora", horario: "Lun/Mier 09-11, Vier 09-10", aula: "GC-213/GC-302/VIRTU" },
       ]
     },
 
     // ── T16: Mayo - Julio 2026 (ACTIVO) ─────────────────────────────────────
     {
-      periodo: "Mayo - Julio 2026",
-      estado: "ACTIVO",
-      creditosAprobados: 0,
-      gpa: 0.00,
-      indiceTrimestral: 0.00,
-      indiceAcumulado: 3.60,
+      periodo: "Mayo - Julio 2026", estado: "ACTIVO", creditosAprobados: 0,
+      gpa: 0.00, indiceTrimestral: 0.00, indiceAcumulado: 3.60,
       asignaturas: [
-        { clave: "CBM208",  calif: null, cr: 5,  pts: null },
-        { clave: "IDS328",  calif: null, cr: 4,  pts: null },
-        { clave: "IDS328L", calif: null, cr: 1,  pts: null },
+        { clave: "CBM208",  calif: null, cr: 5, pts: null, profesor: "N/A", horario: "Lun/Mier 20-22, Vier 18-19", aula: "GC-313/VIRTU" },
+        { clave: "IDS328",  calif: null, cr: 4, pts: null, profesor: "Gabriel Elivan Villalona Eusebio", horario: "Lun/Mier 18-20", aula: "ER-202/VIRTU" },
+        { clave: "IDS328L", calif: null, cr: 1, pts: null, profesor: "Gabriel Elivan Villalona Eusebio", horario: "Sáb 09-12", aula: "LABT1411" },
       ]
     },
   ];
@@ -584,6 +508,9 @@ async function main() {
             claveMateria: a.clave,
             calificacion: a.calif,
             puntos:       a.pts,
+            profesor:     a.profesor || null,
+            horario:      a.horario || null,
+            aula:         a.aula || null
           }))
         }
       }
@@ -602,8 +529,8 @@ async function main() {
       horarios: {
         create: [
           { claveMateria: "CBM208",  profesor: "N/A", dia: "Lunes y Miércoles", horas: "20:00 - 22:00", aula: "GC-313 / VIRTUAL" },
-          { claveMateria: "IDS328",  profesor: "N/A", dia: "Lunes y Miércoles", horas: "18:00 - 20:00", aula: "ER-202 / VIRTUAL"  },
-          { claveMateria: "IDS328L", profesor: "N/A", dia: "Sábado",            horas: "09:00 - 12:00", aula: "LABTI411"          },
+          { claveMateria: "IDS328",  profesor: "Gabriel Elivan Villalona Eusebio", dia: "Lunes y Miércoles", horas: "18:00 - 20:00", aula: "ER-202 / VIRTUAL"  },
+          { claveMateria: "IDS328L", profesor: "Gabriel Elivan Villalona Eusebio", dia: "Sábado",            horas: "09:00 - 12:00", aula: "LABTI411"          },
         ]
       }
     }

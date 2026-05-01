@@ -6,6 +6,7 @@ import Historial from './pages/Historial';
 import Simulador from './pages/Simulador';
 import Volante from './pages/Volante';
 import Dashboard from './pages/Dashboard';
+import Finanzas from './pages/Finanzas';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/historial" element={<Historial />} />
             <Route path="/simulador" element={<Simulador />} />
             <Route path="/volante" element={<Volante />} />
+            <Route path="/finanzas" element={<Finanzas />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
