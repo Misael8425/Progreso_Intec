@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Wallet, Target, DollarSign, TrendingUp } from 'lucide-react';
-import { calcularCostoTrimestre, formatearDinero, obtenerTarifa, TARIFAS_INTEC } from '../utils/tarifas';
+import { calcularCostoMateria, formatearDinero, obtenerTarifa, obtenerTarifaPorPeriodo } from '../utils/tarifas';
 
 /**
  * ResumenFinanciero
@@ -13,19 +13,49 @@ import { calcularCostoTrimestre, formatearDinero, obtenerTarifa, TARIFAS_INTEC }
 const ResumenFinanciero = ({ volante, creditosPendientes = 0, anioActual = 2026 }) => {
   const tarifaActual = obtenerTarifa(anioActual);
 
-  // ── Cálculo del Volante Actual ───────────────────────────────────────────────
-  const creditosVolante = useMemo(() => {
-    if (!volante?.asignaturas?.length) return 0;
-    return volante.asignaturas.reduce((acc, asig) => {
-      const creditos = asig.asignaturaPensum?.creditos ?? asig.creditos ?? 0;
-      return acc + creditos;
-    }, 0);
-  }, [volante]);
+  // ── Cálculo del Volante Actual (con laboratorios) ───────────────────────────
+  const desgloseActual = useMemo(() => {
+    if (!volante?.asignaturas?.length) {
+      return { costoCreditos: 0, recargoLabs: 0, carnet: 0, tarifaCredito: tarifaActual.costoCredito, total: 0, creditosTotales: 0 };
+    }
 
-  const costoVolante = calcularCostoTrimestre(creditosVolante, anioActual);
+    // Tarifa correcta según el período del volante (respeta la Regla de Febrero)
+    const tarifa = volante.periodo
+      ? obtenerTarifaPorPeriodo(volante.periodo)
+      : tarifaActual;
+
+    // 1. Sumar créditos y detectar laboratorios en una sola iteración
+    let creditosTotales = 0;
+    let recargoLabs = 0;
+
+    volante.asignaturas.forEach((asig) => {
+      const creditos = asig.asignaturaPensum?.creditos ?? asig.creditos ?? 0;
+      creditosTotales += creditos;
+
+      const codigo = asig.claveMateria ?? asig.codigo ?? '';
+      const nombre = asig.asignaturaPensum?.nombre ?? asig.nombre ?? '';
+      const { recargoLab } = calcularCostoMateria(
+        { nombre, codigo, creditos },
+        tarifa
+      );
+      recargoLabs += recargoLab;
+    });
+
+    const costoCreditos = creditosTotales * tarifa.costoCredito;
+
+    return {
+      costoCreditos,
+      recargoLabs,
+      carnet: tarifa.carnet,
+      tarifaCredito: tarifa.costoCredito,
+      total: costoCreditos + recargoLabs + tarifa.carnet,
+      creditosTotales,
+    };
+  }, [volante, tarifaActual]);
+
+  const creditosVolante = desgloseActual.creditosTotales;
 
   // ── Proyección a Graduación ──────────────────────────────────────────────────
-  // Promedio histórico por trimestre (basado en el volante activo como referencia)
   const creditosPorTrimestre = creditosVolante > 0 ? creditosVolante : 10;
   const trimestresRestantes = Math.ceil(creditosPendientes / creditosPorTrimestre);
   const costoProyectado = creditosPendientes * tarifaActual.costoCredito +
@@ -66,24 +96,37 @@ const ResumenFinanciero = ({ volante, creditosPendientes = 0, anioActual = 2026 
             </div>
           ) : (
             <>
+              {/* Monto Principal */}
               <p className="text-cyan-400 font-bold text-2xl sm:text-3xl leading-tight mb-1 tabular-nums">
-                {formatearDinero(costoVolante)}
-              </p>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Basado en{' '}
-                <span className="text-slate-400 font-medium">{creditosVolante} créditos</span>
-                {' '}a{' '}
-                <span className="text-slate-400 font-medium">{formatearDinero(tarifaActual.costoCredito)}</span>
-                {' '}+ {formatearDinero(tarifaActual.carnet)} de carnet
+                {formatearDinero(desgloseActual.total)}
               </p>
 
-              {/* Desglose pill */}
+              {/* Texto descriptivo */}
+              <p className="text-xs text-slate-500 leading-relaxed">
+                {volante?.periodo && <span className="text-slate-400 font-medium">{volante.periodo} · </span>}
+                <span className="text-slate-400 font-medium">{creditosVolante} créditos</span>
+                {' '}a{' '}
+                <span className="text-slate-400 font-medium">{formatearDinero(desgloseActual.tarifaCredito)}</span>
+                {' '}+ {formatearDinero(desgloseActual.carnet)} carnet
+                {desgloseActual.recargoLabs > 0 && (
+                  <span className="text-amber-400 font-medium">{' '}+ {formatearDinero(desgloseActual.recargoLabs)} labs</span>
+                )}
+              </p>
+
+              {/* Píldoras de desglose */}
               <div className="mt-4 flex flex-wrap gap-2">
-                <span className="text-xs bg-slate-800 text-slate-400 px-2 py-1 rounded-md border border-slate-700/50">
-                  {creditosVolante} crs × {formatearDinero(tarifaActual.costoCredito)} = {formatearDinero(creditosVolante * tarifaActual.costoCredito)}
+                <span className="text-xs bg-slate-800/80 text-slate-300 px-3 py-1.5 rounded-md border border-slate-700/50">
+                  {creditosVolante} cr × {formatearDinero(desgloseActual.tarifaCredito)}
                 </span>
-                <span className="text-xs bg-slate-800 text-slate-400 px-2 py-1 rounded-md border border-slate-700/50">
-                  Carnet: {formatearDinero(tarifaActual.carnet)}
+
+                {desgloseActual.recargoLabs > 0 && (
+                  <span className="text-xs bg-rose-900/30 text-rose-300 px-3 py-1.5 rounded-md border border-rose-800/50">
+                    Labs: {formatearDinero(desgloseActual.recargoLabs)}
+                  </span>
+                )}
+
+                <span className="text-xs bg-slate-800/80 text-slate-300 px-3 py-1.5 rounded-md border border-slate-700/50">
+                  Carnet: {formatearDinero(desgloseActual.carnet)}
                 </span>
               </div>
             </>
