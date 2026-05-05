@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { obtenerPensum, obtenerHistorialTrimestres, obtenerVolanteActivo } from '../services/api';
 import { Loader2, Wallet, Target, DollarSign, TrendingUp, Receipt, BadgeDollarSign, CircleCheck, CircleDashed, ChevronDown } from 'lucide-react';
-import { TARIFAS_INTEC, calcularCostoTrimestre, formatearDinero, obtenerTarifa, obtenerTarifaPorPeriodo } from '../utils/tarifas';
+import { TARIFAS_INTEC, calcularCostoMateria, calcularCostoTrimestre, formatearDinero, obtenerTarifa, obtenerTarifaPorPeriodo } from '../utils/tarifas';
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Helper: extrae el año de un string de período.
@@ -346,9 +346,15 @@ const Finanzas = () => {
                                 materias.map((materia) => {
                                   const cr     = materia.asignaturaPensum?.creditos ?? 0;
                                   const nombre = materia.asignaturaPensum?.nombre   ?? materia.claveMateria;
+                                  const codigo = materia.claveMateria ?? '';
                                   const calif  = materia.calificacion ?? '—';
-                                  // CO/EI/R tienen cr=0 en costo; sí mostramos el carnet al final
-                                  const subtotal = cr * tarifa.costoCredito;
+
+                                  // Usa calcularCostoMateria para detectar labs y calcular subtotal correcto
+                                  const { costoBase, recargoLab, esLab } = calcularCostoMateria(
+                                    { nombre, codigo, creditos: cr },
+                                    tarifa
+                                  );
+
                                   // Color de calificación
                                   const califColor =
                                     ['CO', 'EI'].includes(calif) ? 'text-blue-400'
@@ -362,10 +368,15 @@ const Finanzas = () => {
                                       className="grid grid-cols-12 gap-2 px-4 py-2.5 hover:bg-slate-800/30 transition-colors text-xs"
                                     >
                                       <div className="col-span-2 font-mono text-slate-500">
-                                        {materia.claveMateria}
+                                        {codigo}
                                       </div>
                                       <div className="col-span-5 text-slate-300 leading-tight">
                                         {nombre}
+                                        {esLab && recargoLab > 0 && (
+                                          <span className="block mt-0.5 text-[10px] text-amber-400/80 font-medium tracking-wide">
+                                            + Cuota Laboratorio: {formatearDinero(recargoLab)}
+                                          </span>
+                                        )}
                                       </div>
                                       <div className={`col-span-1 text-center font-bold ${califColor}`}>
                                         {calif}
@@ -374,7 +385,7 @@ const Finanzas = () => {
                                         {cr}
                                       </div>
                                       <div className="col-span-2 text-right text-slate-400 tabular-nums">
-                                        {cr > 0 ? formatearDinero(subtotal) : <span className="text-slate-600">—</span>}
+                                        {cr > 0 ? formatearDinero(costoBase + recargoLab) : <span className="text-slate-600">—</span>}
                                       </div>
                                     </div>
                                   );
