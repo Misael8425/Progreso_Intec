@@ -2,24 +2,15 @@ import React, { useMemo } from 'react';
 import { Wallet, Target, DollarSign, TrendingUp } from 'lucide-react';
 import { formatearDinero, obtenerTarifa, obtenerTarifaPorPeriodo } from '../utils/tarifas';
 
-/**
- * ResumenFinanciero
- *
- * Props:
- *  - volante: object | null   → volante activo del estudiante (contiene asignaturas con créditos)
- *  - creditosPendientes: number → créditos que le faltan al estudiante para graduarse
- *  - anioActual: number        → año de la tarifa vigente (default 2026)
- */
 const ResumenFinanciero = ({ volante, creditosPendientes = 0, anioActual = 2026 }) => {
   const tarifaActual = obtenerTarifa(anioActual);
 
-  // ── Cálculo del Volante Actual (con laboratorios a prueba de fallos) ────────
+  // ── Cálculo del Volante Actual (con laboratorios 100% blindados) ────────
   const desgloseActual = useMemo(() => {
     if (!volante?.asignaturas?.length) {
       return { costoCreditos: 0, recargoLabs: 0, carnet: 0, tarifaCredito: tarifaActual.costoCredito, total: 0, creditosTotales: 0 };
     }
 
-    // Tarifa correcta según el período del volante
     const tarifa = volante.periodo
       ? obtenerTarifaPorPeriodo(volante.periodo)
       : tarifaActual;
@@ -28,19 +19,25 @@ const ResumenFinanciero = ({ volante, creditosPendientes = 0, anioActual = 2026 
     let recargoLabs = 0;
 
     volante.asignaturas.forEach((asig) => {
-      // Suma de créditos
-      const creditos = asig.asignaturaPensum?.creditos ?? asig.creditos ?? 0;
+      // 1. Interceptar cualquier posible objeto anidado de Prisma
+      const relacion = asig.asignaturaPensum || asig.asignatura || asig.materia || asig;
+
+      // 2. Extraer créditos de forma segura
+      const creditos = relacion.creditos ?? asig.creditos ?? 0;
       creditosTotales += creditos;
 
-      // Extracción robusta: Buscamos en todas las posibles llaves que Prisma pueda devolver
-      const codigo = String(asig.claveMateria || asig.clave || asig.codigo || '').trim().toUpperCase();
-      const nombre = String(asig.asignaturaPensum?.nombre || asig.nombre || '').trim().toLowerCase();
+      // 3. Extracción profunda de código y nombre
+      const codigoRaw = asig.claveMateria || asig.codigo || relacion.clave || relacion.codigo || '';
+      const nombreRaw = relacion.nombre || asig.nombre || '';
 
-      // Detección estricta del laboratorio
-      const esLaboratorio = codigo.endsWith('L') || nombre.includes('lab');
+      const codigo = String(codigoRaw).trim().toUpperCase();
+      const nombre = String(nombreRaw).trim().toLowerCase();
+
+      // 4. Detección infalible de laboratorio
+      const esLaboratorio = codigo.endsWith('L') || nombre.includes('lab') || nombre.includes('laboratorio');
 
       if (esLaboratorio) {
-        // Sumamos el costo, usando 4515 como fallback seguro de 2026 en caso de que tarifa.costoLab falle
+        // Fallback dinámico asegurado
         recargoLabs += (tarifa.costoLab || 4515);
       }
     });
@@ -84,7 +81,6 @@ const ResumenFinanciero = ({ volante, creditosPendientes = 0, anioActual = 2026 
 
         {/* ── Sección Izquierda: Volante Actual ── */}
         <div className="relative overflow-hidden bg-slate-950/50 rounded-2xl p-5 border border-slate-800/60 hover:border-cyan-500/30 transition-colors group">
-          {/* Decorative glow */}
           <div className="absolute -top-8 -right-8 w-24 h-24 bg-cyan-500/5 rounded-full blur-2xl group-hover:bg-cyan-500/10 transition-colors" />
 
           <div className="flex items-center gap-2 mb-4">
@@ -113,7 +109,7 @@ const ResumenFinanciero = ({ volante, creditosPendientes = 0, anioActual = 2026 
                 <span className="text-slate-400 font-medium">{formatearDinero(desgloseActual.tarifaCredito)}</span>
                 {' '}+ {formatearDinero(desgloseActual.carnet)} carnet
                 {desgloseActual.recargoLabs > 0 && (
-                  <span className="text-amber-400 font-medium">{' '}+ {formatearDinero(desgloseActual.recargoLabs)} labs</span>
+                  <span className="text-rose-400 font-medium">{' '}+ {formatearDinero(desgloseActual.recargoLabs)} labs</span>
                 )}
               </p>
 
@@ -139,7 +135,6 @@ const ResumenFinanciero = ({ volante, creditosPendientes = 0, anioActual = 2026 
 
         {/* ── Sección Derecha: Proyección a Graduación ── */}
         <div className="relative overflow-hidden bg-slate-950/50 rounded-2xl p-5 border border-slate-800/60 hover:border-indigo-500/30 transition-colors group">
-          {/* Decorative glow */}
           <div className="absolute -top-8 -right-8 w-24 h-24 bg-indigo-500/5 rounded-full blur-2xl group-hover:bg-indigo-500/10 transition-colors" />
 
           <div className="flex items-center gap-2 mb-4">
@@ -183,7 +178,7 @@ const ResumenFinanciero = ({ volante, creditosPendientes = 0, anioActual = 2026 
       {/* ── Footer: Nota de disclaimer ── */}
       <p className="mt-4 text-xs text-slate-600 text-center flex items-center justify-center gap-1.5">
         <TrendingUp className="w-3 h-3" />
-        Proyección basada en tarifas {anioActual}. No incluye ajustes futuros por inflación.
+        Proyección basada en tarifas {anioActual}. No incluye ajustes futuros por inflación ni laboratorios no planificados.
       </p>
     </section>
   );
