@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Wallet, Target, DollarSign, TrendingUp } from 'lucide-react';
-import { calcularCostoMateria, formatearDinero, obtenerTarifa, obtenerTarifaPorPeriodo } from '../utils/tarifas';
+import { formatearDinero, obtenerTarifa, obtenerTarifaPorPeriodo } from '../utils/tarifas';
 
 /**
  * ResumenFinanciero
@@ -13,32 +13,36 @@ import { calcularCostoMateria, formatearDinero, obtenerTarifa, obtenerTarifaPorP
 const ResumenFinanciero = ({ volante, creditosPendientes = 0, anioActual = 2026 }) => {
   const tarifaActual = obtenerTarifa(anioActual);
 
-  // ── Cálculo del Volante Actual (con laboratorios) ───────────────────────────
+  // ── Cálculo del Volante Actual (con laboratorios a prueba de fallos) ────────
   const desgloseActual = useMemo(() => {
     if (!volante?.asignaturas?.length) {
       return { costoCreditos: 0, recargoLabs: 0, carnet: 0, tarifaCredito: tarifaActual.costoCredito, total: 0, creditosTotales: 0 };
     }
 
-    // Tarifa correcta según el período del volante (respeta la Regla de Febrero)
+    // Tarifa correcta según el período del volante
     const tarifa = volante.periodo
       ? obtenerTarifaPorPeriodo(volante.periodo)
       : tarifaActual;
 
-    // 1. Sumar créditos y detectar laboratorios en una sola iteración
     let creditosTotales = 0;
     let recargoLabs = 0;
 
     volante.asignaturas.forEach((asig) => {
+      // Suma de créditos
       const creditos = asig.asignaturaPensum?.creditos ?? asig.creditos ?? 0;
       creditosTotales += creditos;
 
-      const codigo = asig.claveMateria ?? asig.codigo ?? '';
-      const nombre = asig.asignaturaPensum?.nombre ?? asig.nombre ?? '';
-      const { recargoLab } = calcularCostoMateria(
-        { nombre, codigo, creditos },
-        tarifa
-      );
-      recargoLabs += recargoLab;
+      // Extracción robusta: Buscamos en todas las posibles llaves que Prisma pueda devolver
+      const codigo = String(asig.claveMateria || asig.clave || asig.codigo || '').trim().toUpperCase();
+      const nombre = String(asig.asignaturaPensum?.nombre || asig.nombre || '').trim().toLowerCase();
+
+      // Detección estricta del laboratorio
+      const esLaboratorio = codigo.endsWith('L') || nombre.includes('lab');
+
+      if (esLaboratorio) {
+        // Sumamos el costo, usando 4515 como fallback seguro de 2026 en caso de que tarifa.costoLab falle
+        recargoLabs += (tarifa.costoLab || 4515);
+      }
     });
 
     const costoCreditos = creditosTotales * tarifa.costoCredito;
