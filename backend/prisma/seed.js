@@ -528,7 +528,7 @@ async function main() {
       activo: true,
       horarios: {
         create: [
-          { claveMateria: "CBM208",  profesor: "N/A", dia: "Lunes y Miércoles", horas: "20:00 - 22:00", aula: "GC-313 / VIRTUAL" },
+          { claveMateria: "CBM208",  profesor: "Giro Guillermo Candelario Villalona", dia: "Lunes y Miércoles", horas: "20:00 - 22:00", aula: "GC-313 / VIRTUAL" },
           { claveMateria: "IDS328",  profesor: "Gabriel Elivan Villalona Eusebio", dia: "Lunes y Miércoles", horas: "18:00 - 20:00", aula: "ER-202 / VIRTUAL"  },
           { claveMateria: "IDS328L", profesor: "Gabriel Elivan Villalona Eusebio", dia: "Sábado",            horas: "09:00 - 12:00", aula: "LABTI411"          },
         ]
