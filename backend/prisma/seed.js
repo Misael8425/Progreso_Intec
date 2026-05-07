@@ -487,7 +487,7 @@ async function main() {
       periodo: "Mayo - Julio 2026", estado: "ACTIVO", creditosAprobados: 0,
       gpa: 0.00, indiceTrimestral: 0.00, indiceAcumulado: 3.60,
       asignaturas: [
-        { clave: "CBM208",  calif: null, cr: 5, pts: null, profesor: "N/A", horario: "Lun/Mier 20-22, Vier 18-19", aula: "GC-313/VIRTU" },
+        { clave: "CBM208",  calif: null, cr: 5, pts: null, profesor: "Giro Guillermo Candelario Villalona", horario: "Lun/Mier 20-22, Vier 18-19", aula: "GC-313/VIRTU" },
         { clave: "IDS328",  calif: null, cr: 4, pts: null, profesor: "Gabriel Elivan Villalona Eusebio", horario: "Lun/Mier 18-20", aula: "ER-202/VIRTU" },
         { clave: "IDS328L", calif: null, cr: 1, pts: null, profesor: "Gabriel Elivan Villalona Eusebio", horario: "Sáb 09-12", aula: "LABT1411" },
       ]
