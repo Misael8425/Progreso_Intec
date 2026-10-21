@@ -171,8 +171,8 @@ async function main() {
   ];
 
   // Estado real según el récord (fuente de verdad: Record_Según_Pensum PDF)
-  const cursando  = new Set(['CBM208', 'IDS328', 'IDS328L']);
-  const pendientes = new Set(['CBM203', 'CBM305', 'INS380', 'INS380L', 'IDS330', 'IDS330L', 'IDS3X5']);
+  const cursando  = new Set([]); // T17 ya tiene notas publicadas; al elegir T18, agregar aquí las materias en curso
+  const pendientes = new Set(['CBM203', 'CBM305', 'IDS330', 'IDS330L', 'IDS3X5']);
   // CBM202 fue reprobada múltiples veces y aprobada con C en Feb-Abr 2026
   // ISE2E1 ya tiene nota (ING237 → A)
 
@@ -218,6 +218,8 @@ async function main() {
     'EEP3X2': 'A',  'EEP3X3': 'A',  'IDS334': 'A',  'IDS357': 'A',
     // Restantes
     'ISE2X1': 'CO', 'IDS354': null,
+    // T16 y T17 (récord impreso 21/10/2026)
+    'CBM208': 'C',  'IDS328': 'A+', 'IDS328L': 'A+', 'INS380': 'A', 'INS380L': 'A',
   };
 
   // Crear materias en AsignaturaPensum (sin duplicar EEE2X1)
@@ -482,14 +484,27 @@ async function main() {
       ]
     },
 
-    // ── T16: Mayo - Julio 2026 (ACTIVO) ─────────────────────────────────────
+    // ── T16: Mayo - Julio 2026 ───────────────────────────────────────────────
     {
-      periodo: "Mayo - Julio 2026", estado: "ACTIVO", creditosAprobados: 0,
-      gpa: 0.00, indiceTrimestral: 0.00, indiceAcumulado: 3.60,
+      periodo: "Mayo - Julio 2026", estado: "CERRADO", creditosAprobados: 10,
+      gpa: 2.50, indiceTrimestral: 2.50, indiceAcumulado: 3.55,
       asignaturas: [
-        { clave: "CBM208",  calif: null, cr: 5, pts: null, profesor: "Giro Guillermo Candelario Villalona", horario: "Lun/Mier 20-22, Vier 18-19", aula: "GC-313/VIRTU" },
-        { clave: "IDS328",  calif: null, cr: 4, pts: null, profesor: "Gabriel Elivan Villalona Eusebio", horario: "Lun/Mier 18-20", aula: "ER-202/VIRTU" },
-        { clave: "IDS328L", calif: null, cr: 1, pts: null, profesor: "Gabriel Elivan Villalona Eusebio", horario: "Sáb 09-12", aula: "LABT1411" },
+        { clave: "CBM208",  calif: "D",  cr: 5, pts: 5,  profesor: "Giro Guillermo Candelario Villalona", horario: "Lun/Mier 20-22, Vier 18-19", aula: "GC-313/VIRTU" },
+        { clave: "IDS328",  calif: "A+", cr: 4, pts: 16, profesor: "Gabriel Elivan Villalona Eusebio", horario: "Lun/Mier 18-20", aula: "ER-202/VIRTU" },
+        { clave: "IDS328L", calif: "A+", cr: 1, pts: 4,  profesor: "Gabriel Elivan Villalona Eusebio", horario: "Sáb 09-12", aula: "LABT1411" },
+      ]
+    },
+
+    // ── T17: Agosto - Octubre 2026 ───────────────────────────────────────────
+    // Pagado: RD$ 50,449.75 (recibo 000000032318) = 53,105.00 − 5 %
+    // Calificaciones publicadas pero sin "Condición Académica" aún en el récord.
+    {
+      periodo: "Agosto - Octubre 2026", estado: "CERRADO", creditosAprobados: 10,
+      gpa: 2.88, indiceTrimestral: 2.88, indiceAcumulado: 3.52,
+      asignaturas: [
+        { clave: "CBM208",  calif: "C", cr: 5, pts: 10,   profesor: null, horario: null, aula: null },
+        { clave: "INS380",  calif: "A", cr: 4, pts: 15,   profesor: null, horario: null, aula: null },
+        { clave: "INS380L", calif: "A", cr: 1, pts: 3.75, profesor: null, horario: null, aula: null },
       ]
     },
   ];
@@ -525,7 +540,7 @@ async function main() {
   await prisma.volanteSeleccion.create({
     data: {
       periodo: "Mayo - Julio 2026",
-      activo: true,
+      activo: false, // T16 terminó; cargar el volante del próximo trimestre cuando esté disponible
       horarios: {
         create: [
           { claveMateria: "CBM208",  profesor: "Giro Guillermo Candelario Villalona", dia: "Lunes y Miércoles", horas: "20:00 - 22:00", aula: "GC-313 / VIRTUAL" },

@@ -36,7 +36,7 @@ const Volante = () => {
     );
   }
 
-  if (!volante) {
+  if (!volante || !volante.id) {
     return (
       <div className="text-center p-12 bg-slate-800/20 rounded-3xl border border-slate-700/50">
         <p className="text-slate-400 text-lg">No hay ningún volante activo en este momento.</p>

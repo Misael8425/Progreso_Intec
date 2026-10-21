@@ -1,19 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { obtenerPensum, obtenerHistorialTrimestres, obtenerVolanteActivo } from '../services/api';
 import { Loader2, Wallet, Target, DollarSign, TrendingUp, Receipt, BadgeDollarSign, CircleCheck, CircleDashed, ChevronDown } from 'lucide-react';
-import { TARIFAS_INTEC, calcularCostoMateria, calcularCostoTrimestre, formatearDinero, obtenerTarifa, obtenerTarifaPorPeriodo } from '../utils/tarifas';
-
-// ────────────────────────────────────────────────────────────────────────────────
-// Helper: extrae el año de un string de período.
-// "Agosto - Octubre 2022"        → 2022
-// "Noviembre 2022 - Enero 2023"  → 2022  (año de inicio)
-// "Mayo - Julio 2026"            → 2026
-// ────────────────────────────────────────────────────────────────────────────────
-const extraerAnio = (periodo = '') => {
-  const matches = periodo.match(/\d{4}/g);
-  if (!matches || matches.length === 0) return new Date().getFullYear();
-  return parseInt(matches[0], 10); // usa el primer año encontrado
-};
+import { calcularCostoMateria, calcularDesgloseTrimestre, esLaboratorio, formatearDinero, obtenerTarifaPorPeriodo } from '../utils/tarifas';
 
 // ────────────────────────────────────────────────────────────────────────────────
 // Sub-componente: Tarjeta de métrica superior
@@ -48,9 +36,6 @@ const Finanzas = () => {
     setTrimestreExpandido(prev => prev === id ? null : id);
   };
 
-  const anioActual = new Date().getFullYear();
-  const tarifaActual = obtenerTarifa(anioActual);
-
   useEffect(() => {
     const fetchAll = async () => {
       try {
@@ -71,21 +56,26 @@ const Finanzas = () => {
     fetchAll();
   }, []);
 
-  // ── Créditos del trimestre activo (T16: Mayo-Julio 2026) ────────────────────
-  // El volante del backend solo tiene horarios, no créditos.
-  // Los créditos reales están en el trimestre con estado ACTIVO del historial.
+  // ── Trimestre de referencia ─────────────────────────────────────────────────
+  // Si hay uno ACTIVO se usa ese; si no, el último CERRADO (el más reciente pagado).
   const trimestreActivo = useMemo(
     () => historial.find(t => t.estado === 'ACTIVO') || null,
     [historial]
   );
+  const trimestreReferencia = useMemo(() => {
+    if (trimestreActivo) return trimestreActivo;
+    const cerrados = historial.filter(t => t.estado === 'CERRADO');
+    return cerrados[cerrados.length - 1] || null;
+  }, [historial, trimestreActivo]);
 
-  const creditosActivos = useMemo(() => {
-    if (!trimestreActivo?.asignaturas?.length) return 0;
-    return trimestreActivo.asignaturas.reduce(
-      (acc, asig) => acc + (asig.asignaturaPensum?.creditos ?? asig.creditos ?? 0),
-      0
-    );
-  }, [trimestreActivo]);
+  const desgloseActual = useMemo(
+    () => (trimestreReferencia ? calcularDesgloseTrimestre(trimestreReferencia) : null),
+    [trimestreReferencia]
+  );
+  const creditosActivos = desgloseActual?.creditos ?? 0;
+  const tarifaActual = desgloseActual?.tarifa ?? obtenerTarifaPorPeriodo(null);
+  const costoActual = desgloseActual?.total ?? 0;
+  const referenciaEsActiva = Boolean(trimestreActivo);
 
   // ── Créditos aprobados y pendientes ────────────────────────────────────────
   const TOTAL_CREDITOS = 279;
@@ -95,16 +85,18 @@ const Finanzas = () => {
   const creditosAprobados = materiasAprobadasLista.reduce((acc, m) => acc + m.creditos, 0);
   const creditosPendientes = TOTAL_CREDITOS - creditosAprobados;
 
-  // ── Costo del trimestre actual ──────────────────────────────────────────────
-  const costoActual = calcularCostoTrimestre(creditosActivos, anioActual);
-
-  // ── Proyección a graduación ─────────────────────────────────────────────────────
-  // Siempre usa TARIFAS_INTEC[2026] para mantener la proyección anclada a la tarifa vigente.
-  const tarifaProyeccion    = TARIFAS_INTEC[2026];
+  // ── Proyección a graduación ─────────────────────────────────────────────────
+  // Usa la tarifa vigente (la del último trimestre) e incluye el cargo de
+  // laboratorio de las materias pendientes que lo tengan.
+  const tarifaProyeccion = tarifaActual;
   const creditosPorTrimestre = creditosActivos > 0 ? creditosActivos : 10;
-  const trimestresRestantes  = Math.ceil(creditosPendientes / creditosPorTrimestre);
+  const trimestresRestantes = Math.ceil(creditosPendientes / creditosPorTrimestre);
+  const labsPendientes = pensum.filter(
+    m => m.estado !== 'Aprobada' && m.creditos > 0 && esLaboratorio(m.clave, m.nombre)
+  ).length;
   const costoProyectado =
     creditosPendientes * tarifaProyeccion.costoCredito +
+    labsPendientes * (tarifaProyeccion.costoLab || 0) +
     trimestresRestantes * tarifaProyeccion.carnet;
 
   // ── Desglose histórico ──────────────────────────────────────────────────────
@@ -114,10 +106,8 @@ const Finanzas = () => {
     return historial
       .filter(t => t.estado === 'CERRADO')
       .map(t => {
-        const tarifa  = obtenerTarifaPorPeriodo(t.periodo);
-        const creditos = t.creditosAprobados ?? 0;
-        const costo   = creditos * tarifa.costoCredito + tarifa.carnet;
-        return { ...t, creditos, costo };
+        const d = calcularDesgloseTrimestre(t);
+        return { ...t, creditos: d.creditos, costo: d.total, desglose: d };
       });
   }, [historial]);
 
@@ -173,28 +163,40 @@ const Finanzas = () => {
             <div className="bg-cyan-500/10 p-2 rounded-lg border border-cyan-500/20">
               <Wallet className="w-5 h-5 text-cyan-400" />
             </div>
-            <h3 className="text-sm font-semibold text-slate-300 tracking-wide">Costo Trimestre Actual</h3>
+            <h3 className="text-sm font-semibold text-slate-300 tracking-wide">
+              {referenciaEsActiva ? 'Costo Trimestre Actual' : 'Último Trimestre'}
+            </h3>
           </div>
-          {creditosActivos === 0 ? (
-            <p className="text-slate-500 text-sm py-2">Sin trimestre activo con créditos.</p>
+          {!desgloseActual || creditosActivos === 0 ? (
+            <p className="text-slate-500 text-sm py-2">Sin trimestre con créditos.</p>
           ) : (
             <>
               <p className="text-cyan-400 font-bold text-2xl sm:text-3xl tabular-nums mb-1">
                 {formatearDinero(costoActual)}
               </p>
               <p className="text-xs text-slate-500">
-                {trimestreActivo?.periodo} ·{' '}
+                {trimestreReferencia?.periodo} ·{' '}
                 <span className="text-slate-400 font-medium">{creditosActivos} créditos</span>
-                {' '}a {formatearDinero(tarifaActual.costoCredito)} + {formatearDinero(tarifaActual.carnet)} carnet
+                {desgloseActual.pagos ? (desgloseActual.montoEstimado > 0 ? ' · pagado (1 cuota estimada)' : ' · pagado') : ' · estimado'}
               </p>
               {/* Desglose pills */}
               <div className="mt-4 flex flex-wrap gap-2">
                 <span className="text-xs bg-slate-800 text-slate-400 px-2 py-1 rounded-md border border-slate-700/50">
                   {creditosActivos} cr × {formatearDinero(tarifaActual.costoCredito)}
                 </span>
+                {desgloseActual.laboratorios > 0 && (
+                  <span className="text-xs bg-slate-800 text-slate-400 px-2 py-1 rounded-md border border-slate-700/50">
+                    {desgloseActual.laboratorios} lab × {formatearDinero(tarifaActual.costoLab)}
+                  </span>
+                )}
                 <span className="text-xs bg-slate-800 text-slate-400 px-2 py-1 rounded-md border border-slate-700/50">
-                  Carnet: {formatearDinero(tarifaActual.carnet)}
+                  Carnet: {formatearDinero(desgloseActual.carnet)}
                 </span>
+                {desgloseActual.descuento > 0 && (
+                  <span className="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-md border border-emerald-500/20">
+                    Descuento {desgloseActual.porcentajeDescuento.toFixed(0)}%: −{formatearDinero(desgloseActual.descuento)}
+                  </span>
+                )}
               </div>
             </>
           )}
@@ -264,13 +266,14 @@ const Finanzas = () => {
                 <th className="text-left px-5 py-3.5 font-semibold">Período</th>
                 <th className="text-center px-5 py-3.5 font-semibold">Créditos</th>
                 <th className="text-right px-5 py-3.5 font-semibold">Tarifa/cr</th>
+                <th className="text-right px-5 py-3.5 font-semibold">Labs</th>
                 <th className="text-right px-5 py-3.5 font-semibold">Carnet</th>
                 <th className="text-right px-4 py-3.5 font-semibold">Total Trimestre</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800/60">
               {trimestresHistoricos.map((t, i) => {
-                const tarifa   = obtenerTarifaPorPeriodo(t.periodo);
+                const tarifa   = t.desglose.tarifa;
                 const isOpen   = trimestreExpandido === t.id;
                 // Materias del trimestre con sus créditos del pensum
                 const materias = t.asignaturas ?? [];
@@ -305,7 +308,10 @@ const Finanzas = () => {
                         {formatearDinero(tarifa.costoCredito)}
                       </td>
                       <td className="px-5 py-4 text-right text-slate-400 tabular-nums">
-                        {formatearDinero(tarifa.carnet)}
+                        {t.desglose.recargoLabs > 0 ? formatearDinero(t.desglose.recargoLabs) : <span className="text-slate-600">—</span>}
+                      </td>
+                      <td className="px-5 py-4 text-right text-slate-400 tabular-nums">
+                        {formatearDinero(t.desglose.carnet)}
                       </td>
                       <td className="px-4 py-4 text-right">
                         <div className="flex items-center justify-end gap-2">
@@ -326,7 +332,7 @@ const Finanzas = () => {
                     {/* ── Panel de desglose expandido ── */}
                     {isOpen && (
                       <tr className="bg-slate-950/70">
-                        <td colSpan={6} className="px-0 pb-0 pt-0">
+                        <td colSpan={7} className="px-0 pb-0 pt-0">
                           <div className="mx-3 mb-3 border-l-2 border-cyan-500/60 rounded-bl-xl rounded-br-xl bg-slate-950/80 overflow-hidden">
 
                             {/* Cabecera del desglose */}
@@ -399,9 +405,41 @@ const Finanzas = () => {
                                 Carnet estudiantil
                               </div>
                               <div className="col-span-2 text-right text-slate-400 tabular-nums">
-                                {formatearDinero(tarifa.carnet)}
+                                {formatearDinero(t.desglose.carnet)}
                               </div>
                             </div>
+
+                            {/* Fila: Descuento (solo si hay recibo con descuento) */}
+                            {t.desglose.descuento > 0 && (
+                              <div className="grid grid-cols-12 gap-2 px-4 py-2.5 border-t border-slate-800/60 bg-emerald-950/20 text-xs">
+                                <div className="col-span-10 text-right text-emerald-400/80 font-medium">
+                                  Descuento ({t.desglose.porcentajeDescuento.toFixed(0)}%)
+                                </div>
+                                <div className="col-span-2 text-right text-emerald-400 tabular-nums">
+                                  −{formatearDinero(t.desglose.descuento)}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Pagos registrados */}
+                            {t.desglose.pagos && (
+                              <div className="px-4 py-2.5 border-t border-slate-800/60 bg-slate-900/30 text-xs space-y-1">
+                                <p className="text-slate-500 font-medium uppercase tracking-widest text-[10px]">Pagos</p>
+                                {t.desglose.pagos.map((p, k) => (
+                                  <div key={k} className="flex justify-between text-slate-400">
+                                    <span>
+                                      Cuota {k + 1}
+                                      {p.fecha && ` · ${p.fecha}`}
+                                      {p.referencia && ` · Recibo ${p.referencia}`}
+                                      {p.estimado && (
+                                        <span className="ml-2 text-amber-400/80">estimado, sin comprobante</span>
+                                      )}
+                                    </span>
+                                    <span className="tabular-nums">{formatearDinero(p.monto)}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
 
                             {/* Fila: Total del trimestre */}
                             <div className="grid grid-cols-12 gap-2 px-4 py-3 border-t-2 border-slate-700/60 bg-slate-950/60 text-xs">
@@ -426,7 +464,7 @@ const Finanzas = () => {
             {/* Fila de Total */}
             <tfoot>
               <tr className="bg-slate-950/80 border-t-2 border-slate-700/60">
-                <td colSpan={5} className="px-5 py-4">
+                <td colSpan={6} className="px-5 py-4">
                   <div className="flex items-center gap-2">
                     <DollarSign className="w-4 h-4 text-emerald-400" />
                     <span className="font-bold text-slate-200 tracking-wide">Gran Total Invertido</span>
@@ -443,13 +481,13 @@ const Finanzas = () => {
               </tr>
 
               {/* Fila: Trimestre activo */}
-              {creditosActivos > 0 && (
+              {referenciaEsActiva && creditosActivos > 0 && (
                 <tr className="bg-cyan-950/20 border-t border-cyan-900/30">
-                  <td colSpan={5} className="px-5 py-3">
+                  <td colSpan={6} className="px-5 py-3">
                     <div className="flex items-center gap-2">
                       <CircleDashed className="w-4 h-4 text-cyan-400 animate-pulse" />
                       <span className="font-semibold text-cyan-300 text-sm">
-                        {trimestreActivo?.periodo} (en curso)
+                        {trimestreReferencia?.periodo} (en curso)
                       </span>
                     </div>
                   </td>
@@ -462,9 +500,9 @@ const Finanzas = () => {
               )}
 
               {/* Fila: Inversión total proyectada (cerrados + activo) */}
-              {creditosActivos > 0 && (
+              {referenciaEsActiva && creditosActivos > 0 && (
                 <tr className="bg-slate-950/90">
-                  <td colSpan={5} className="px-5 py-3">
+                  <td colSpan={6} className="px-5 py-3">
                     <div className="flex items-center gap-2">
                       <TrendingUp className="w-4 h-4 text-slate-400" />
                       <span className="text-slate-400 text-sm font-medium">
@@ -486,8 +524,8 @@ const Finanzas = () => {
         {/* Disclaimer */}
         <p className="mt-5 text-xs text-slate-600 text-center flex items-center justify-center gap-1.5">
           <TrendingUp className="w-3 h-3" />
-          Los trimestres T1 con materias convalidadas (CO) utilizan los créditos registrados oficialmente.
-          La proyección no incluye ajustes inflacionarios futuros.
+          Las materias convalidadas (CO/EI) y retiradas (R) no se cobran. Los laboratorios se cobran aparte desde Mayo 2026. Si hay un recibo registrado, se usa el monto realmente pagado.
+          La proyección no incluye descuentos ni ajustes inflacionarios futuros.
         </p>
       </section>
 
