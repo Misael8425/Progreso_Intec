@@ -101,7 +101,7 @@ export const calcularDesgloseTrimestre = (trimestre) => {
   const tarifa = obtenerTarifaPorPeriodo(trimestre?.periodo, trimestre?.anio);
   const materias = trimestre?.asignaturas ?? [];
 
-  let creditos = 0;
+  let creditosCalculados = 0;
   let laboratorios = 0;
 
   for (const asig of materias) {
@@ -109,9 +109,14 @@ export const calcularDesgloseTrimestre = (trimestre) => {
     const pensum = asig.asignaturaPensum ?? {};
     const cr = pensum.creditos ?? asig.creditos ?? 0;
     const codigo = asig.claveMateria ?? asig.clave ?? '';
-    creditos += cr;
+    creditosCalculados += cr;
     if (cr > 0 && esLaboratorio(codigo, pensum.nombre)) laboratorios += 1;
   }
+
+  // Los créditos del récord oficial (CR del trimestre) son la fuente más fiable:
+  // las electivas genéricas del pensum no siempre guardan el crédito real de la
+  // materia que se cursó. Si no hay dato, se usa la suma de las materias.
+  const creditos = trimestre?.creditosAprobados > 0 ? trimestre.creditosAprobados : creditosCalculados;
 
   const costoCreditos = creditos * tarifa.costoCredito;
   const recargoLabs = laboratorios * (tarifa.costoLab || 0);

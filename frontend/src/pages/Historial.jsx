@@ -77,6 +77,7 @@ const AsigCard = ({ asig }) => (
 // ─── Tarjeta de un trimestre completo ────────────────────────────────────────
 const TrimestreCard = ({ trimestre, numero }) => {
   const esActivo = trimestre.estado === 'ACTIVO';
+  const tieneNotas = (trimestre.asignaturas ?? []).some(a => a.calificacion);
   return (
     <div className={`rounded-2xl border overflow-hidden transition-all duration-300 ${
       esActivo
@@ -114,8 +115,8 @@ const TrimestreCard = ({ trimestre, numero }) => {
           </div>
           <div className="text-center">
             <p className="text-[10px] text-slate-500 font-semibold uppercase">GPA</p>
-            <p className={`text-lg font-extrabold ${esActivo ? 'text-slate-500' : 'text-cyan-400'}`}>
-              {esActivo ? '—' : (trimestre.gpa ?? trimestre.indiceTrimestral ?? 0).toFixed(2)}
+            <p className={`text-lg font-extrabold ${esActivo && !tieneNotas ? 'text-slate-500' : 'text-cyan-400'}`}>
+              {esActivo && !tieneNotas ? '—' : (trimestre.gpa ?? trimestre.indiceTrimestral ?? 0).toFixed(2)}
             </p>
           </div>
         </div>

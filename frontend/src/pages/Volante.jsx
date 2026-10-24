@@ -54,7 +54,13 @@ const Volante = () => {
   }, {});
 
   // Ordenar los días lógicamente
-  const diasDisponibles = Object.keys(horariosAgrupados || {}).sort((a, b) => diasOrden.indexOf(a) - diasOrden.indexOf(b));
+  // Los grupos pueden ser "Lunes y Miércoles": se ordenan por el primer día que mencionan
+  const posicionDia = (grupo) => {
+    const idx = diasOrden.map(d => grupo.indexOf(d)).filter(i => i >= 0);
+    if (idx.length === 0) return diasOrden.length; // "Por confirmar", etc. al final
+    return diasOrden.findIndex(d => grupo.indexOf(d) === Math.min(...idx));
+  };
+  const diasDisponibles = Object.keys(horariosAgrupados || {}).sort((a, b) => posicionDia(a) - posicionDia(b));
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-5xl mx-auto">

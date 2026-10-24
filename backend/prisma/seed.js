@@ -153,7 +153,7 @@ async function main() {
 
     // ── Trimestre 13 (10 CR) ─────────────────────────────────────────────────
     // EEE2X2 = cursada como CSG210 (Derechos Humanos)
-    { clave: "EEE2X2",  nombre: "ELECTIVAS DE ESTUDIOS ESPECIALIZADOS II",                     creditos: 0, trimestreSugerido: 13 },
+    { clave: "EEE2X2",  nombre: "ELECTIVAS DE ESTUDIOS ESPECIALIZADOS II",                     creditos: 4, trimestreSugerido: 13 },
     // EEP3X1 = cursada como CO (convalidada)
     { clave: "EEP3X1",  nombre: "ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES I",                  creditos: 0, trimestreSugerido: 13 },
     { clave: "IDS322",  nombre: "MANTENIMIENTO DE SOFTWARE",                                   creditos: 4, trimestreSugerido: 13 },
@@ -163,9 +163,9 @@ async function main() {
 
     // ── Trimestre 14 (8 CR) ──────────────────────────────────────────────────
     // EEP3X2 = cursada como ADM337 (Derecho Comercial)
-    { clave: "EEP3X2",  nombre: "ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES II",                 creditos: 0, trimestreSugerido: 14 },
+    { clave: "EEP3X2",  nombre: "ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES II",                 creditos: 4, trimestreSugerido: 14 },
     // EEP3X3 = cursada como INS369 (Inteligencia de Negocios)
-    { clave: "EEP3X3",  nombre: "ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES III",                creditos: 0, trimestreSugerido: 14 },
+    { clave: "EEP3X3",  nombre: "ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES III",                creditos: 4, trimestreSugerido: 14 },
     { clave: "IDS334",  nombre: "SEMINARIO DE TECNOLOGIA E INGENIERIA DE SOFTWARE",            creditos: 4, trimestreSugerido: 14 },
     { clave: "IDS357",  nombre: "PROYECTO FINAL DE GRADO",                                     creditos: 4, trimestreSugerido: 14 },
   ];
@@ -497,14 +497,14 @@ async function main() {
 
     // ── T17: Agosto - Octubre 2026 ───────────────────────────────────────────
     // Pagado: RD$ 50,449.75 (recibo 000000032318) = 53,105.00 − 5 %
-    // Calificaciones publicadas pero sin "Condición Académica" aún en el récord.
+    // Trimestre en curso: las notas ya están publicadas pero INTEC aún no lo cierra (sin "Condición Académica").
     {
-      periodo: "Agosto - Octubre 2026", estado: "CERRADO", creditosAprobados: 10,
+      periodo: "Agosto - Octubre 2026", estado: "ACTIVO", creditosAprobados: 10,
       gpa: 2.88, indiceTrimestral: 2.88, indiceAcumulado: 3.52,
       asignaturas: [
-        { clave: "CBM208",  calif: "C", cr: 5, pts: 10,   profesor: null, horario: null, aula: null },
-        { clave: "INS380",  calif: "A", cr: 4, pts: 15,   profesor: null, horario: null, aula: null },
-        { clave: "INS380L", calif: "A", cr: 1, pts: 3.75, profesor: null, horario: null, aula: null },
+        { clave: "CBM208",  calif: "C", cr: 5, pts: 10,   profesor: "Pedro Jesus Lalondriz Mateo", horario: "Lun/Mier 07-09, Vier 07-08", aula: "EL402/VIRTU" },
+        { clave: "INS380",  calif: "A", cr: 4, pts: 15,   profesor: "Jhonny De Jesus Liriano Batista", horario: "Mar/Jue 18-20", aula: "GC-213" },
+        { clave: "INS380L", calif: "A", cr: 1, pts: 3.75, profesor: "Jhonny De Jesus Liriano Batista", horario: "Sáb 10-13", aula: "LABTI403" },
       ]
     },
   ];
@@ -536,18 +536,19 @@ async function main() {
   // ─────────────────────────────────────────────────────────────────────────────
   // 4. VOLANTE DE SELECCIÓN ACTIVO
   // ─────────────────────────────────────────────────────────────────────────────
-  console.log("4. Creando Volante de Selección activo...");
+  console.log("4. Creando Volante de Selección activo (T17)...");
+  // Fuente: Volante de Selección impreso el 6/8/2026 (Mis Clases · BeeCampus)
+  const VOLANTE_T17 = [
+    { claveMateria: "CBM208",  profesor: "Pedro Jesus Lalondriz Mateo",     dia: "Lunes y Miércoles", horas: "07:00 - 09:00", aula: "EL402 (Presencial)" },
+    { claveMateria: "CBM208",  profesor: "Pedro Jesus Lalondriz Mateo",     dia: "Viernes",           horas: "07:00 - 08:00", aula: "VIRTUAL" },
+    { claveMateria: "INS380",  profesor: "Jhonny De Jesus Liriano Batista", dia: "Martes y Jueves",   horas: "18:00 - 20:00", aula: "GC-213" },
+    { claveMateria: "INS380L", profesor: "Jhonny De Jesus Liriano Batista", dia: "Sábado",            horas: "10:00 - 13:00", aula: "LABTI403" },
+  ];
   await prisma.volanteSeleccion.create({
     data: {
-      periodo: "Mayo - Julio 2026",
-      activo: false, // T16 terminó; cargar el volante del próximo trimestre cuando esté disponible
-      horarios: {
-        create: [
-          { claveMateria: "CBM208",  profesor: "Giro Guillermo Candelario Villalona", dia: "Lunes y Miércoles", horas: "20:00 - 22:00", aula: "GC-313 / VIRTUAL" },
-          { claveMateria: "IDS328",  profesor: "Gabriel Elivan Villalona Eusebio", dia: "Lunes y Miércoles", horas: "18:00 - 20:00", aula: "ER-202 / VIRTUAL"  },
-          { claveMateria: "IDS328L", profesor: "Gabriel Elivan Villalona Eusebio", dia: "Sábado",            horas: "09:00 - 12:00", aula: "LABTI411"          },
-        ]
-      }
+      periodo: "Agosto - Octubre 2026",
+      activo: true,
+      horarios: { create: VOLANTE_T17 }
     }
   });
 

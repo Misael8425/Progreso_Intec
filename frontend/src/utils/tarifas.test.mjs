@@ -36,6 +36,19 @@ assert.equal(t16.descuento, 0);
 assert.equal(t16.pagadoConRecibo, 34518.25);
 assert.equal(t16.montoEstimado, 18586.75);
 
+// Electiva con crédito 0 en el pensum: manda el CR del récord (4 créditos reales)
+const tElec = calcularDesgloseTrimestre({
+  periodo: 'Febrero - Abril 2024',
+  creditosAprobados: 22,
+  asignaturas: [
+    mat('EEE2X2', 'ELECTIVAS DE ESTUDIOS ESPECIALIZADOS II', 0, 'A'),
+    mat('IDS335', 'DISEÑO DE SOFTWARE', 4, 'A'),
+  ],
+});
+assert.equal(tElec.creditos, 22);
+// Feb–Abr usa la tarifa del año anterior (2023): 3.943 por crédito + 500 de carnet
+assert.equal(tElec.total, 22 * 3943 + 500);
+
 // T1 – convalidadas (CO/EI) no se cobran
 const t1 = calcularDesgloseTrimestre({
   periodo: 'Agosto - Octubre 2022',

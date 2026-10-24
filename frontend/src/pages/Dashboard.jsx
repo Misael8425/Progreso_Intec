@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { obtenerPensum, obtenerHistorialTrimestres, obtenerVolanteActivo } from '../services/api';
 import { Loader2, TrendingUp, BookCheck, BookDashed, CalendarClock, MapPin, Clock, History } from 'lucide-react';
+import PermanenciaChart from '../components/PermanenciaChart';
+import PensumProgressChart from '../components/PensumProgressChart';
+import { PLAN, periodosRestantes } from '../utils/plan';
 
 const Dashboard = () => {
   const [data, setData] = useState({
@@ -69,11 +72,11 @@ const Dashboard = () => {
 
   const materiasAprobadasLista = pensum.filter(m => m.estado === 'Aprobada' || m.calificacion === 'CO' || m.calificacion === 'EI');
   const creditosAprobados = materiasAprobadasLista.reduce((acc, curr) => acc + curr.creditos, 0);
-  const TOTAL_CREDITOS = 279;
+  const TOTAL_CREDITOS = PLAN.totalCreditos;
   const porcentajeAvanceCreditos = Math.min(((creditosAprobados / TOTAL_CREDITOS) * 100), 100).toFixed(1);
 
   // Matemáticas exactas para las asignaturas
-  const TOTAL_MATERIAS = 113; // El pensum oficial del INTEC IDS-2020 tiene exactamente 113 asignaturas
+  const TOTAL_MATERIAS = PLAN.totalMaterias; // Pensum oficial INTEC IDS-2020: 113 asignaturas
   const materiasAprobadas = materiasAprobadasLista.length;
   const materiasEnCurso = pensum.filter(m => m.estado === 'Cursando').length;
   const porcentajeAvanceMaterias = Math.min(((materiasAprobadas / TOTAL_MATERIAS) * 100), 100).toFixed(1);
@@ -81,18 +84,23 @@ const Dashboard = () => {
   // Todo lo que no está aprobado, está pendiente por aprobar (esto engloba 'Pendiente', 'Reprobada' y 'Cursando')
   const materiasPendientes = TOTAL_MATERIAS - materiasAprobadas;
 
+  // Trimestres de permanencia: transcurridos (los registrados) vs. el máximo permitido
+  const trimestresTranscurridos = historial.length;
+  const trimestresQueQuedan = Math.max(PLAN.trimestresPermanencia - trimestresTranscurridos, 0);
+  const proximosPeriodos = periodosRestantes(trimestresDescendentes[0]?.periodo, trimestresQueQuedan);
+  const creditosPendientes = Math.max(TOTAL_CREDITOS - creditosAprobados, 0);
+
   // 2. Clases de Hoy
-  const diasSemana = ['Domingo', 'Lunes', 'Miércoles', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']; // Ojo: JS getDay 2 es Martes
-  diasSemana[2] = 'Martes'; // corrección
-  diasSemana[3] = 'Miércoles';
+  const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
 
   const diaActual = diasSemana[new Date().getDay()];
   
   // Normalizar strings para evitar problemas con acentos (ej. Miércoles vs Miercoles)
   const normalizeStr = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   
-  const clasesDeHoy = volante?.horarios?.filter(h => 
-    normalizeStr(h.dia) === normalizeStr(diaActual)
+  // El día puede venir agrupado ("Lunes y Miércoles"), por eso se usa includes
+  const clasesDeHoy = volante?.horarios?.filter(h =>
+    normalizeStr(h.dia).includes(normalizeStr(diaActual))
   ) || [];
 
   return (
@@ -182,6 +190,17 @@ const Dashboard = () => {
         </div>
       </section>
 
+      {/* GRÁFICAS: permanencia y progreso del pensum */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <PermanenciaChart
+          transcurridos={trimestresTranscurridos}
+          total={PLAN.trimestresPermanencia}
+          proximos={proximosPeriodos}
+          creditosPendientes={creditosPendientes}
+        />
+        <PensumProgressChart pensum={pensum} />
+      </div>
+
       {/* MIDDLE & BOTTOM SECTIONS: 2 Columns on Desktop */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
@@ -239,6 +258,7 @@ const Dashboard = () => {
             {trimestresDescendentes.slice(0, 3).map((trimestre, i) => {
               const esActual = i === 0;
               const numMaterias = trimestre.asignaturas?.length || 0;
+              const tieneNotas = (trimestre.asignaturas ?? []).some(a => a.calificacion);
               const numCreditos = trimestre.asignaturas?.reduce((acc, asig) => acc + (asig.asignaturaPensum?.creditos || 0), 0) || 0;
 
               return (
@@ -260,9 +280,9 @@ const Dashboard = () => {
                   </div>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-2">
                     <p className="text-xs text-slate-400 font-medium">
-                      {numMaterias} {esActual ? 'Materias en curso' : 'Materias aprobadas'} &bull; {numCreditos} {esActual ? 'Créditos en curso' : 'Créditos aprobados'}
+                      {numMaterias} {esActual && !tieneNotas ? 'Materias en curso' : 'Materias'} &bull; {numCreditos} {esActual && !tieneNotas ? 'Créditos en curso' : 'Créditos'}
                     </p>
-                    {esActual ? (
+                    {esActual && !tieneNotas ? (
                       <span className="text-xs font-bold text-cyan-500">
                         Calificaciones pendientes
                       </span>
