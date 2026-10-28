@@ -97,7 +97,7 @@ export const COMPONENTES_ELECTIVAS = [
     requerido: 2,
     nota: 'Una electiva de 2 créditos (CBA101 a CBA105).',
     espacios: [
-      { slot: 'CBA1X3', real: { clave: 'CBA103', nombre: 'Fundamentos de Gestión Ambiental' } },
+      { slot: 'CBA1X3', real: { clave: 'CBA103', nombre: 'Fundamentos de Gestión Ambiental', cr: 2 } },
     ],
   },
   {
@@ -107,10 +107,10 @@ export const COMPONENTES_ELECTIVAS = [
     requerido: 8,
     nota: 'Cuatro electivas de 2 créditos (EAA1X1 a EAA1X4).',
     espacios: [
-      { slot: 'EAA1X1', real: { clave: 'ASM104', nombre: 'Vida Saludable' } },
-      { slot: 'EAA1X2', real: { clave: 'ASM107', nombre: 'Nutrición Saludable' } },
-      { slot: 'EAA1X3', real: { clave: 'CBA106', nombre: 'Ambiente y Cultura' } },
-      { slot: 'EAA1X4', real: { clave: 'NEG101', nombre: 'Inteligencia Financiera' } },
+      { slot: 'EAA1X1', real: { clave: 'ASM104', nombre: 'Vida Saludable', cr: 2 } },
+      { slot: 'EAA1X2', real: { clave: 'ASM107', nombre: 'Nutrición Saludable', cr: 2 } },
+      { slot: 'EAA1X3', real: { clave: 'CBA106', nombre: 'Ambiente y Cultura', cr: 2 } },
+      { slot: 'EAA1X4', real: { clave: 'NEG101', nombre: 'Inteligencia Financiera', cr: 2 } },
     ],
   },
   {
@@ -120,7 +120,7 @@ export const COMPONENTES_ELECTIVAS = [
     requerido: 4,
     nota: 'Una electiva de 4 créditos (CSH237, CBA202, ING237 o NEG208).',
     espacios: [
-      { slot: 'ISE2E1', real: { clave: 'ING237', nombre: 'Impacto Social (ING)' } },
+      { slot: 'ISE2E1', real: { clave: 'ING237', nombre: 'Impacto Social (ING)', cr: 4 } },
     ],
   },
   {
@@ -136,7 +136,7 @@ export const COMPONENTES_ELECTIVAS = [
       },
       {
         slot: 'EEE2X2',
-        real: { clave: 'CSG210', nombre: 'Derechos Humanos', nota: 'Aparece como CSH210 en la lista de electivas' },
+        real: { clave: 'CSG210', nombre: 'Derechos Humanos', cr: 4, nota: 'Aparece como CSH210 en la lista de electivas' },
       },
     ],
   },
@@ -151,8 +151,8 @@ export const COMPONENTES_ELECTIVAS = [
         slot: 'EEP3X1',
         convalidada: { itla: 'TDS 005 · Diseño Centrado en el Usuario', cr: 0 },
       },
-      { slot: 'EEP3X2', real: { clave: 'ADM337', nombre: 'Derecho Comercial' } },
-      { slot: 'EEP3X3', real: { clave: 'INS369', nombre: 'Inteligencia de Negocios' } },
+      { slot: 'EEP3X2', real: { clave: 'ADM337', nombre: 'Derecho Comercial', cr: 4 } },
+      { slot: 'EEP3X3', real: { clave: 'INS369', nombre: 'Inteligencia de Negocios', cr: 4 } },
     ],
   },
 ];
@@ -170,7 +170,6 @@ export const resumenElectivas = (historial = []) => {
           numeroTrimestre: i + 1,
           periodo: historial[i].periodo,
           calificacion: asig.calificacion,
-          creditos: asig.asignaturaPensum?.creditos ?? 0,
         };
       }
     }
@@ -178,8 +177,15 @@ export const resumenElectivas = (historial = []) => {
   };
 
   return COMPONENTES_ELECTIVAS.map((comp) => {
-    const espacios = comp.espacios.map((esp) => ({ ...esp, cursada: buscar(esp.slot) }));
-    const obtenido = espacios.reduce((acc, e) => acc + (e.cursada?.creditos ?? 0), 0);
+    // Los créditos salen del récord oficial (datos fijos de arriba), no del pensum guardado en la base,
+    // que puede traer valores viejos. Si el historial no cargó, se asume lo del récord.
+    const espacios = comp.espacios.map((esp) => {
+      const cursada = buscar(esp.slot);
+      const creditos = esp.real?.cr ?? esp.convalidada?.cr ?? 0;
+      const cuenta = Boolean(cursada) || historial.length === 0;
+      return { ...esp, cursada, creditos, cuenta };
+    });
+    const obtenido = espacios.reduce((acc, e) => acc + (e.cuenta ? e.creditos : 0), 0);
     return {
       ...comp,
       espacios,

@@ -4,6 +4,7 @@
 require('dotenv').config();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const PENSUM_ACTUAL = require('./data/pensum-ids2020.json'); // Pensum IDS-2020 (docx) + estados según tus colores
 
 const PERIODO_T17 = 'Agosto - Octubre 2026';
 const PERIODO_T18 = 'Noviembre 2026 - Enero 2027';
@@ -76,6 +77,38 @@ async function main() {
   } else {
     console.warn('! ISE2X1 tiene registros asociados; no se eliminó');
   }
+  // 3c. Sincroniza créditos, trimestre sugerido y estado de TODAS las materias con el pensum
+  //     actualizado. Corrige bases creadas con un seed anterior (p. ej. electivas con 0 créditos).
+  let cambios = 0;
+  for (const m of PENSUM_ACTUAL) {
+    const actual = await prisma.asignaturaPensum.findUnique({ where: { clave: m.clave } });
+    if (!actual) {
+      await prisma.asignaturaPensum.create({
+        data: { clave: m.clave, nombre: m.nombre, creditos: m.creditos, trimestreSugerido: m.trimestre, estado: m.estado, calificacion: null },
+      });
+      console.log(`+ ${m.clave} agregada al pensum`);
+      cambios++;
+      continue;
+    }
+    const data = {};
+    if (actual.creditos !== m.creditos) data.creditos = m.creditos;
+    if (actual.trimestreSugerido !== m.trimestre) data.trimestreSugerido = m.trimestre;
+    if (actual.estado !== m.estado) {
+      data.estado = m.estado;
+      if (m.estado !== 'Aprobada') data.calificacion = null;
+    }
+    if (Object.keys(data).length) {
+      await prisma.asignaturaPensum.update({ where: { clave: m.clave }, data });
+      console.log(`~ ${m.clave}: ${Object.entries(data).map(([k, v]) => `${k}=${v}`).join(', ')}`);
+      cambios++;
+    }
+  }
+  const clavesActuales = new Set(PENSUM_ACTUAL.map(m => m.clave));
+  const sobrantes = (await prisma.asignaturaPensum.findMany({ select: { clave: true } }))
+    .map(x => x.clave).filter(c => !clavesActuales.has(c));
+  if (sobrantes.length) console.warn(`! Materias en la base que no están en el pensum actual (no se tocan): ${sobrantes.join(', ')}`);
+  console.log(`~ Pensum sincronizado (${cambios} cambios)`);
+
   const NOMBRES_ELECTIVAS = {
     CBA1X3: 'VIDA EN EL MEDIO AMBIENTE (ELECTIVAS) · CBA103 Fundamentos de Gestión Ambiental',
     EAA1X1: 'ELECTIVAS DE AREAS ACADEMICAS I · ASM104 Vida Saludable',

@@ -86,7 +86,7 @@ const ComponenteCard = ({ comp }) => {
                 )}
               </div>
               <div className="col-span-6 sm:col-span-2 sm:text-right text-xs text-slate-400 tabular-nums">
-                {(esp.cursada?.creditos ?? esp.convalidada?.cr ?? 0)} cr
+                {esp.creditos} cr
               </div>
               <div className="col-span-6 sm:col-span-2 text-right">
                 <Badge className={colorNota(nota)}>{nota ?? '—'}</Badge>

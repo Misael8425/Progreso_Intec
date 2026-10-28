@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { obtenerPensum, obtenerHistorialTrimestres, obtenerVolanteActivo } from '../services/api';
 import { Loader2, TrendingUp, BookCheck, BookDashed, CalendarClock, MapPin, Clock, History } from 'lucide-react';
 import PermanenciaChart from '../components/PermanenciaChart';
+import { resumenElectivas } from '../utils/electivas';
 import PensumProgressChart from '../components/PensumProgressChart';
 import { PLAN, periodosRestantes } from '../utils/plan';
 
@@ -90,12 +91,9 @@ const Dashboard = () => {
   const trimestresQueQuedan = Math.max(PLAN.trimestresPermanencia - trimestresTranscurridos, 0);
   const proximosPeriodos = periodosRestantes(trimestresDescendentes[0]?.periodo, trimestresQueQuedan);
   const creditosPendientes = Math.max(TOTAL_CREDITOS - creditosAprobados, 0);
-  // Créditos que faltan pero que ninguna materia del pensum cubre (hoy: 4 de electiva profesional,
-  // porque EEP3X1 se convalidó con 0 créditos). Ver la página "Electivas".
-  const creditosEnMateriasPendientes = pensum
-    .filter(m => !(m.estado === 'Aprobada' || m.calificacion === 'CO' || m.calificacion === 'EI'))
-    .reduce((acc, m) => acc + m.creditos, 0);
-  const creditosPorConfirmar = Math.max(creditosPendientes - creditosEnMateriasPendientes, 0);
+  // Créditos de electivas que faltan según el récord (hoy: 4 de electiva profesional, porque EEP3X1 se
+  // convalidó con 0 créditos). Se calcula con los datos fijos de electivas, no con el pensum de la base.
+  const creditosPorConfirmar = resumenElectivas(historial).reduce((acc, c) => acc + c.faltante, 0);
 
   // 2. Clases de Hoy
   const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];

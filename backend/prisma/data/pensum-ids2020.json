@@ -1,0 +1,786 @@
+[
+ {
+  "clave": "AHC109",
+  "nombre": "REDACCION",
+  "creditos": 4,
+  "trimestre": 1,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "AHO102",
+  "nombre": "ORIENTACION ACADEMICA E INSTITUCIONAL",
+  "creditos": 0,
+  "trimestre": 1,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CBA1X3",
+  "nombre": "VIDA EN EL MEDIO AMBIENTE (ELECTIVAS)",
+  "creditos": 2,
+  "trimestre": 1,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CBM101",
+  "nombre": "ALGEBRA Y GEOMETRIA ANALITICA",
+  "creditos": 5,
+  "trimestre": 1,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CSH112",
+  "nombre": "CIUDADANIA Y ETICA",
+  "creditos": 2,
+  "trimestre": 1,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "EAA1X1",
+  "nombre": "ELECTIVAS DE AREAS ACADEMICAS I",
+  "creditos": 2,
+  "trimestre": 1,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "EAA1X2",
+  "nombre": "ELECTIVAS DE AREAS ACADEMICAS II",
+  "creditos": 2,
+  "trimestre": 1,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "EAA1X3",
+  "nombre": "ELECTIVAS DE AREAS ACADEMICAS III",
+  "creditos": 2,
+  "trimestre": 1,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS207",
+  "nombre": "INTRODUCCION A LA INGENIERIA DE SOFTWARE",
+  "creditos": 2,
+  "trimestre": 1,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "SHI103",
+  "nombre": "INGLES 01 (BASICO I)",
+  "creditos": 0,
+  "trimestre": 1,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "AHC110",
+  "nombre": "ARGUMENTACIÓN LINGÜÍSTICA",
+  "creditos": 4,
+  "trimestre": 2,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CBM102",
+  "nombre": "CALCULO DIFERENCIAL",
+  "creditos": 5,
+  "trimestre": 2,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CSS102",
+  "nombre": "SER HUMANO Y SOCIEDAD: TEMAS SOCIALES CONTEMPORANEOS",
+  "creditos": 2,
+  "trimestre": 2,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "EAA1X4",
+  "nombre": "ELECTIVAS DE AREAS ACADEMICAS IV",
+  "creditos": 2,
+  "trimestre": 2,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS323",
+  "nombre": "TECNICAS FUNDAMENTALES DE INGENIERIA DE SOFTWARE",
+  "creditos": 4,
+  "trimestre": 2,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS323L",
+  "nombre": "LABORATORIO TECNICAS FUNDAMENTALES DE INGENIERIA DE SOFTWARE",
+  "creditos": 1,
+  "trimestre": 2,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "ING102",
+  "nombre": "INTRODUCCION A LA PROGRAMACION",
+  "creditos": 2,
+  "trimestre": 2,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "ING102L",
+  "nombre": "LABORATORIO DE INTRODUCCION A LA PROGRAMACION",
+  "creditos": 0,
+  "trimestre": 2,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "SHI104",
+  "nombre": "INGLES 02 (BASICO II)",
+  "creditos": 0,
+  "trimestre": 2,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CBF210",
+  "nombre": "FISICA MECANICA I",
+  "creditos": 4,
+  "trimestre": 3,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CBF210L",
+  "nombre": "LABORATORIO DE FISICA MECANICA I",
+  "creditos": 1,
+  "trimestre": 3,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CBM201",
+  "nombre": "CALCULO INTEGRAL",
+  "creditos": 5,
+  "trimestre": 3,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS202",
+  "nombre": "TECNOLOGIA DE OBJETOS",
+  "creditos": 4,
+  "trimestre": 3,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS202L",
+  "nombre": "LABORATORIO TECNOLOGIA DE OBJETOS",
+  "creditos": 1,
+  "trimestre": 3,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS340",
+  "nombre": "DESARROLLO DE SOFTWARE I",
+  "creditos": 3,
+  "trimestre": 3,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS340L",
+  "nombre": "LABORATORIO DE DESARROLLO DE SOFTWARE I",
+  "creditos": 1,
+  "trimestre": 3,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "ING228",
+  "nombre": "HOJA DE CALCULO PARA INGENIEROS",
+  "creditos": 1,
+  "trimestre": 3,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "SHI105",
+  "nombre": "INGLES 03 (INTERMEDIO I)",
+  "creditos": 0,
+  "trimestre": 3,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "AHQ101",
+  "nombre": "QUEHACER CIENTIFICO",
+  "creditos": 4,
+  "trimestre": 4,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CBF211",
+  "nombre": "FISICA MECANICA II",
+  "creditos": 4,
+  "trimestre": 4,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CBF211L",
+  "nombre": "LABORATORIO DE FISICA MECANICA II",
+  "creditos": 1,
+  "trimestre": 4,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CBM202",
+  "nombre": "CALCULO VECTORIAL",
+  "creditos": 5,
+  "trimestre": 4,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CSH113",
+  "nombre": "PENSAMIENTO CREATIVO",
+  "creditos": 2,
+  "trimestre": 4,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS341",
+  "nombre": "DESARROLLO DE SOFTWARE II",
+  "creditos": 3,
+  "trimestre": 4,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS341L",
+  "nombre": "LABORATORIO DE DESARROLLO DE SOFTWARE II",
+  "creditos": 1,
+  "trimestre": 4,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS342",
+  "nombre": "CONSEJERIA PROFESIONAL INGENIERIA DE SOFTWARE I",
+  "creditos": 0,
+  "trimestre": 4,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "SHI106",
+  "nombre": "INGLES 04 (INTERMEDIO II)",
+  "creditos": 0,
+  "trimestre": 4,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CBM208",
+  "nombre": "ALGEBRA LINEAL",
+  "creditos": 5,
+  "trimestre": 5,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS208",
+  "nombre": "TEAM BUILDING",
+  "creditos": 4,
+  "trimestre": 5,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS311",
+  "nombre": "PROCESO DE SOFTWARE",
+  "creditos": 4,
+  "trimestre": 5,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS324",
+  "nombre": "INGENIERIA DE REQUERIMIENTOS DE SOFTWARE",
+  "creditos": 4,
+  "trimestre": 5,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS324L",
+  "nombre": "LABORATORIO INGENIERIA DE REQUERIMIENTOS DE SOFTWARE",
+  "creditos": 1,
+  "trimestre": 5,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS343",
+  "nombre": "ESTRUCTURAS DE DATOS Y ALGORITMOS I",
+  "creditos": 3,
+  "trimestre": 5,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS343L",
+  "nombre": "LABORATORIO ESTRUCTURAS DE DATOS Y ALGORITMOS I",
+  "creditos": 1,
+  "trimestre": 5,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "SHI107",
+  "nombre": "INGLES 05 (AVANZADO I)",
+  "creditos": 0,
+  "trimestre": 5,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CBM203",
+  "nombre": "ECUACIONES DIFERENCIALES",
+  "creditos": 5,
+  "trimestre": 6,
+  "estado": "Cursando"
+ },
+ {
+  "clave": "CSH105",
+  "nombre": "PROYECTO INTEGRADOR DE ESTUDIOS GENERALES",
+  "creditos": 2,
+  "trimestre": 6,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS344",
+  "nombre": "ESTRUCTURAS DE DATOS Y ALGORITMOS II",
+  "creditos": 3,
+  "trimestre": 6,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS344L",
+  "nombre": "LABORATORIO ESTRUCTURAS DE DATOS Y ALGORITMOS II",
+  "creditos": 1,
+  "trimestre": 6,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IEC208",
+  "nombre": "FUNDAMENTOS ELECTRÓNICA DIGITAL",
+  "creditos": 3,
+  "trimestre": 6,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IEC208L",
+  "nombre": "LABORATORIO FUNDAMENTOS ELECTRÓNICA DIGITAL",
+  "creditos": 1,
+  "trimestre": 6,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "INS377",
+  "nombre": "BASES DE DATOS I",
+  "creditos": 4,
+  "trimestre": 6,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "INS377L",
+  "nombre": "LABORATORIO BASES DE DATOS I",
+  "creditos": 1,
+  "trimestre": 6,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "SHI108",
+  "nombre": "INGLES 06 (AVANZADO II)",
+  "creditos": 0,
+  "trimestre": 6,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CBM305",
+  "nombre": "MATEMATICA DISCRETA I",
+  "creditos": 4,
+  "trimestre": 7,
+  "estado": "Pendiente"
+ },
+ {
+  "clave": "IDS329",
+  "nombre": "INGENIERIA DE FACTORES HUMANOS",
+  "creditos": 4,
+  "trimestre": 7,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS329L",
+  "nombre": "LABORATORIO INGENIERIA DE FACTORES HUMANOS",
+  "creditos": 1,
+  "trimestre": 7,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS345",
+  "nombre": "DESARROLLO DE SOFTWARE III",
+  "creditos": 3,
+  "trimestre": 7,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS345L",
+  "nombre": "LABORATORIO DE DESARROLLO DE SOFTWARE III",
+  "creditos": 1,
+  "trimestre": 7,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS346",
+  "nombre": "MODELOS Y METODOS DE LA INGENIERIA DE SOFTWARE",
+  "creditos": 3,
+  "trimestre": 7,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "INS380",
+  "nombre": "BASES DE DATOS II",
+  "creditos": 4,
+  "trimestre": 7,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "INS380L",
+  "nombre": "LABORATORIO DE BASES DE DATOS II",
+  "creditos": 1,
+  "trimestre": 7,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "ICS202",
+  "nombre": "ALGORITMOS MALICIOSOS",
+  "creditos": 4,
+  "trimestre": 8,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "ICS202L",
+  "nombre": "LABORATORIO DE ALGORITMOS MALICIOSOS",
+  "creditos": 1,
+  "trimestre": 8,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS325",
+  "nombre": "ASEGURAMIENTO DE LA CALIDAD DEL SOFTWARE",
+  "creditos": 4,
+  "trimestre": 8,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS325L",
+  "nombre": "LABORATORIO ASEGURAMIENTO DE LA CALIDAD DEL SOFTWARE",
+  "creditos": 1,
+  "trimestre": 8,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS335",
+  "nombre": "DISEÑO DE SOFTWARE",
+  "creditos": 4,
+  "trimestre": 8,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS347",
+  "nombre": "TENDENCIAS EN DESARROLLO DE SOFTWARE",
+  "creditos": 3,
+  "trimestre": 8,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS347L",
+  "nombre": "LABORATORIO TENDENCIAS EN DESARROLLO DE SOFTWARE",
+  "creditos": 1,
+  "trimestre": 8,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "ING214",
+  "nombre": "ANALISIS DE DATOS EN INGENIERIA",
+  "creditos": 4,
+  "trimestre": 8,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "CON213",
+  "nombre": "FUNDAMENTOS DE CONTABILIDAD",
+  "creditos": 2,
+  "trimestre": 9,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS303",
+  "nombre": "PRACTICA PROFESIONAL DE INGENIERIA DE SOFTWARE",
+  "creditos": 2,
+  "trimestre": 9,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS309",
+  "nombre": "ARQUITECTURA DE SOFTWARE",
+  "creditos": 4,
+  "trimestre": 9,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS348",
+  "nombre": "DESARROLLO DE APLICACIONES WEB",
+  "creditos": 3,
+  "trimestre": 9,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS348L",
+  "nombre": "LABORATORIO DESARROLLO DE APLICACIONES WEB",
+  "creditos": 1,
+  "trimestre": 9,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "ING230",
+  "nombre": "INGENIERIA ECONOMICA",
+  "creditos": 4,
+  "trimestre": 9,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "ING231",
+  "nombre": "EXPERIMENTACION EN INGENIERIA",
+  "creditos": 3,
+  "trimestre": 9,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS326",
+  "nombre": "CONSTRUCCION DE SOFTWARE",
+  "creditos": 4,
+  "trimestre": 10,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS326L",
+  "nombre": "LABORATORIO CONSTRUCCION DE SOFTWARE",
+  "creditos": 1,
+  "trimestre": 10,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS349",
+  "nombre": "DESARROLLO DE APLICACIONES MOVILES",
+  "creditos": 3,
+  "trimestre": 10,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS349L",
+  "nombre": "LABORATORIO DESARROLLO DE APLICACIONES MOVILES",
+  "creditos": 1,
+  "trimestre": 10,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "ING235",
+  "nombre": "FORMULACION Y GESTION DE PROYECTOS TECNOLOGICOS",
+  "creditos": 4,
+  "trimestre": 10,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "ING235L",
+  "nombre": "LABORATORIO FORMULACION Y GESTION DE PROYECTOS TECNOLOGICOS",
+  "creditos": 1,
+  "trimestre": 10,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "INS371",
+  "nombre": "ARQUITECTURA DEL COMPUTADOR",
+  "creditos": 3,
+  "trimestre": 10,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "INS371L",
+  "nombre": "LABORATORIO ARQUITECTURA COMPUTADOR",
+  "creditos": 1,
+  "trimestre": 10,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "ISE2E1",
+  "nombre": "IMPACTO SOCIAL (ELECTIVA)",
+  "creditos": 4,
+  "trimestre": 10,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "ECO322",
+  "nombre": "ECONOMIA DE EMPRESA",
+  "creditos": 4,
+  "trimestre": 11,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS328",
+  "nombre": "ADMINISTRACION DE CONFIGURACION",
+  "creditos": 4,
+  "trimestre": 11,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS328L",
+  "nombre": "LABORATORIO DE ADMINISTRACION DE CONFIGURACION",
+  "creditos": 1,
+  "trimestre": 11,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS330",
+  "nombre": "INTELIGENCIA ARTIFICIAL",
+  "creditos": 3,
+  "trimestre": 11,
+  "estado": "Cursando"
+ },
+ {
+  "clave": "IDS330L",
+  "nombre": "LABORATORIO INTELIGENCIA ARTIFICIAL",
+  "creditos": 1,
+  "trimestre": 11,
+  "estado": "Cursando"
+ },
+ {
+  "clave": "IDS350",
+  "nombre": "CONSEJERIA PROFESIONAL INGENIERIA DE SOFTWARE II",
+  "creditos": 0,
+  "trimestre": 11,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS351",
+  "nombre": "PRUEBAS DE SOFTWARE",
+  "creditos": 2,
+  "trimestre": 11,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "INS373",
+  "nombre": "SISTEMAS OPERATIVOS",
+  "creditos": 4,
+  "trimestre": 11,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "INS373L",
+  "nombre": "LABORATORIO SISTEMAS OPERATIVOS",
+  "creditos": 1,
+  "trimestre": 11,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "ADM315",
+  "nombre": "ADMINISTRACION Y GESTION EMPRESARIAL",
+  "creditos": 4,
+  "trimestre": 12,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "EEE2X1",
+  "nombre": "ELECTIVAS DE ESTUDIOS ESPECIALIZADOS I",
+  "creditos": 0,
+  "trimestre": 12,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "ICS320",
+  "nombre": "FUNDAMENTOS DE CIBERSEGURIDAD",
+  "creditos": 2,
+  "trimestre": 12,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS339",
+  "nombre": "DEVOPS Y DEVSECOPS",
+  "creditos": 3,
+  "trimestre": 12,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS352",
+  "nombre": "ANTEPROYECTO DE GRADO",
+  "creditos": 4,
+  "trimestre": 12,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS353",
+  "nombre": "PASANTIA PROFESIONAL I",
+  "creditos": 2,
+  "trimestre": 12,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS354",
+  "nombre": "GESTION DE LA INGENIERIA DE SOFTWARE",
+  "creditos": 3,
+  "trimestre": 12,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "EEE2X2",
+  "nombre": "ELECTIVAS DE ESTUDIOS ESPECIALIZADOS II",
+  "creditos": 4,
+  "trimestre": 13,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "EEP3X1",
+  "nombre": "ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES I",
+  "creditos": 0,
+  "trimestre": 13,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS322",
+  "nombre": "MANTENIMIENTO DE SOFTWARE",
+  "creditos": 4,
+  "trimestre": 13,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS355",
+  "nombre": "PROYECTO DE GRADO",
+  "creditos": 4,
+  "trimestre": 13,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS356",
+  "nombre": "PASANTIA PROFESIONAL II",
+  "creditos": 2,
+  "trimestre": 13,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS3X5",
+  "nombre": "CERTIFICACION PROFESIONAL",
+  "creditos": 0,
+  "trimestre": 13,
+  "estado": "Pendiente"
+ },
+ {
+  "clave": "EEP3X2",
+  "nombre": "ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES II",
+  "creditos": 4,
+  "trimestre": 14,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "EEP3X3",
+  "nombre": "ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES III",
+  "creditos": 4,
+  "trimestre": 14,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS334",
+  "nombre": "SEMINARIO DE TECNOLOGIA E INGENIERIA DE SOFTWARE",
+  "creditos": 4,
+  "trimestre": 14,
+  "estado": "Aprobada"
+ },
+ {
+  "clave": "IDS357",
+  "nombre": "PROYECTO FINAL DE GRADO",
+  "creditos": 4,
+  "trimestre": 14,
+  "estado": "Aprobada"
+ }
+]

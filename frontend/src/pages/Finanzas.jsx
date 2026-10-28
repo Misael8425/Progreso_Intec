@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { obtenerPensum, obtenerHistorialTrimestres, obtenerVolanteActivo } from '../services/api';
 import { Loader2, Wallet, Target, DollarSign, TrendingUp, Receipt, BadgeDollarSign, CircleCheck, CircleDashed, ChevronDown } from 'lucide-react';
+import CalculadoraCreditos from '../components/CalculadoraCreditos';
+import EvolucionTarifas from '../components/EvolucionTarifas';
 import { calcularCostoMateria, calcularDesgloseTrimestre, esLaboratorio, formatearDinero, obtenerTarifaPorPeriodo } from '../utils/tarifas';
 
 // ────────────────────────────────────────────────────────────────────────────────
@@ -242,6 +244,15 @@ const Finanzas = () => {
           )}
         </div>
       </section>
+
+      {/* ── Calculadora de créditos ─────────────────────────────────────────── */}
+      <CalculadoraCreditos
+        creditosActuales={desgloseActual?.creditos ?? 0}
+        laboratoriosActuales={desgloseActual?.laboratorios ?? 0}
+      />
+
+      {/* ── Evolución del valor del crédito ─────────────────────────────────── */}
+      <EvolucionTarifas historial={historial} />
 
       {/* ── Desglose Histórico ──────────────────────────────────────────────── */}
       <section className="bg-slate-900/40 backdrop-blur-md border border-slate-800/60 shadow-xl shadow-black/20 rounded-3xl p-6 sm:p-8">

@@ -1,6 +1,9 @@
 // Ejecutar con: node src/utils/tarifas.test.mjs
 import assert from 'node:assert/strict';
-import { calcularDesgloseTrimestre, obtenerTarifaPorPeriodo } from './tarifas.js';
+import {
+  calcularDesgloseTrimestre, obtenerTarifaPorPeriodo, obtenerAnioTarifa,
+  calcularCostoManual, historialTarifas, resumenAumentos, TARIFAS_INTEC,
+} from './tarifas.js';
 
 const mat = (clave, nombre, creditos, calificacion) => ({
   claveMateria: clave, calificacion, asignaturaPensum: { nombre, creditos },
@@ -69,5 +72,28 @@ assert.equal(obtenerTarifaPorPeriodo('Mayo - Julio 2026').costoCredito, 4815);
 assert.equal(obtenerTarifaPorPeriodo('Agosto - Octubre', 2023).costoCredito, 3943);
 // Año futuro: usa la última tarifa conocida
 assert.equal(obtenerTarifaPorPeriodo('Mayo - Julio 2027').costoCredito, 4815);
+
+// Calculadora manual: 10 créditos con 1 laboratorio en la tarifa 2026 = 53.105 (y 5 % menos = 50.449,75)
+const man = calcularCostoManual({ creditos: 10, laboratorios: 1, tarifa: TARIFAS_INTEC[2026] });
+assert.equal(man.total, 53105);
+assert.equal(calcularCostoManual({ creditos: 10, laboratorios: 1, tarifa: TARIFAS_INTEC[2026], descuentoPct: 5 }).total, 50449.75);
+assert.equal(calcularCostoManual({ creditos: 0, laboratorios: 0, tarifa: TARIFAS_INTEC[2026] }).total, 0);   // sin créditos no hay carnet
+assert.equal(calcularCostoManual({ creditos: 'abc', tarifa: TARIFAS_INTEC[2026] }).total, 0);               // entrada inválida
+assert.equal(calcularCostoManual({ creditos: 4, tarifa: TARIFAS_INTEC[2023], incluirCarnet: false }).total, 4 * 3943);
+
+// Ciclos y evolución
+assert.equal(obtenerAnioTarifa('Noviembre 2022 - Enero 2023'), 2022);
+assert.equal(obtenerAnioTarifa('Febrero - Abril 2023'), 2022);
+assert.equal(obtenerAnioTarifa('Mayo - Julio 2026'), 2026);
+const h = historialTarifas();
+assert.equal(h.length, 5);
+assert.equal(h[0].variacion, null);
+assert.equal(h[1].variacion, 263);
+assert.equal(h[4].variacion, 95);
+assert.equal(h[4].esActual, true);
+const r = resumenAumentos();
+assert.equal(r.aumento, 1135);
+assert.equal(Math.round(r.aumentoPct * 10) / 10, 30.8);
+assert.equal(Math.round(r.promedioAnualPct * 10) / 10, 7);
 
 console.log('✔ tarifas OK');

@@ -51,8 +51,8 @@ export const obtenerTarifa = (anio) => TARIFAS_INTEC[limitarAnio(anio)];
 
 // Respeta el ciclo fiscal: "Febrero - Abril" usa la tarifa del año anterior.
 // Acepta el año por separado (campo `anio` de la BD) por si el período no lo incluye.
-export const obtenerTarifaPorPeriodo = (periodoString, anioExplicito) => {
-  if (!periodoString) return TARIFAS_INTEC[ANIO_MAX];
+export const obtenerAnioTarifa = (periodoString, anioExplicito) => {
+  if (!periodoString) return ANIO_MAX;
 
   const texto = String(periodoString).toLowerCase();
   const anioEnTexto = parseInt(texto.match(/\d{4}/)?.[0], 10);
@@ -60,8 +60,11 @@ export const obtenerTarifaPorPeriodo = (periodoString, anioExplicito) => {
 
   if (texto.includes('febrero')) anioBase -= 1;
 
-  return TARIFAS_INTEC[limitarAnio(anioBase)];
+  return limitarAnio(anioBase);
 };
+
+export const obtenerTarifaPorPeriodo = (periodoString, anioExplicito) =>
+  TARIFAS_INTEC[obtenerAnioTarifa(periodoString, anioExplicito)];
 
 // ────────────────────────────────────────────────────────────────────────────
 // 4. Detección de laboratorio (código terminado en L o nombre que empieza por "Laboratorio")
@@ -145,6 +148,79 @@ export const calcularDesgloseTrimestre = (trimestre) => {
     pagos,
     pagadoConRecibo,
     montoEstimado,
+  };
+};
+
+// ────────────────────────────────────────────────────────────────────────────
+// 6b. Calculadora manual: "si me inscribo en X créditos, ¿cuánto pago?"
+//     `creditos` incluye los créditos de laboratorio; `laboratorios` es la cantidad de
+//     laboratorios, que desde Mayo 2026 llevan un cargo aparte además de su crédito.
+// ────────────────────────────────────────────────────────────────────────────
+export const calcularCostoManual = ({
+  creditos = 0,
+  laboratorios = 0,
+  tarifa,
+  incluirCarnet = true,
+  descuentoPct = 0,
+}) => {
+  const cr = Math.max(Number(creditos) || 0, 0);
+  const labs = Math.max(Number(laboratorios) || 0, 0);
+  const costoCreditos = cr * tarifa.costoCredito;
+  const recargoLabs = labs * (tarifa.costoLab || 0);
+  const carnet = incluirCarnet && cr > 0 ? tarifa.carnet : 0;
+  const subtotal = costoCreditos + recargoLabs + carnet;
+  const descuento = subtotal * (Math.max(descuentoPct, 0) / 100);
+  const total = subtotal - descuento;
+  return {
+    creditos: cr,
+    laboratorios: labs,
+    costoCreditos,
+    recargoLabs,
+    carnet,
+    subtotal,
+    descuento,
+    total,
+    costoPorCredito: cr > 0 ? total / cr : 0,
+  };
+};
+
+// ────────────────────────────────────────────────────────────────────────────
+// 6c. Evolución de las tarifas desde que empezaste (ciclos de Mayo a Abril)
+// ────────────────────────────────────────────────────────────────────────────
+export const historialTarifas = () => {
+  const anios = [...ANIOS].sort((a, b) => a - b);
+  const base = TARIFAS_INTEC[anios[0]].costoCredito;
+  return anios.map((anio, i) => {
+    const t = TARIFAS_INTEC[anio];
+    const previa = i > 0 ? TARIFAS_INTEC[anios[i - 1]] : null;
+    const variacion = previa ? t.costoCredito - previa.costoCredito : null;
+    return {
+      anio,
+      ciclo: anio === ANIO_MAX ? `Mayo ${anio} – vigente` : `Mayo ${anio} – Abril ${anio + 1}`,
+      ...t,
+      variacion,
+      variacionPct: previa ? (variacion / previa.costoCredito) * 100 : null,
+      acumuladoPct: ((t.costoCredito - base) / base) * 100,
+      trimestreDiezCreditos: 10 * t.costoCredito + t.carnet, // 10 créditos + carnet (sin laboratorio)
+      esActual: anio === ANIO_MAX,
+    };
+  });
+};
+
+export const resumenAumentos = () => {
+  const filas = historialTarifas();
+  const primera = filas[0];
+  const ultima = filas[filas.length - 1];
+  const anios = ultima.anio - primera.anio;
+  const aumento = ultima.costoCredito - primera.costoCredito;
+  return {
+    desde: primera.anio,
+    hasta: ultima.anio,
+    valorInicial: primera.costoCredito,
+    valorActual: ultima.costoCredito,
+    aumento,
+    aumentoPct: (aumento / primera.costoCredito) * 100,
+    promedioAnualPct: anios > 0 ? (Math.pow(ultima.costoCredito / primera.costoCredito, 1 / anios) - 1) * 100 : 0,
   };
 };
 
