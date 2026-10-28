@@ -129,13 +129,10 @@ const ConvalidacionesSeccion = () => (
 
     <div className="space-y-3">
       {CONVALIDACIONES.map((g, i) => {
-        const esElectiva = g.intec.some(m => m.electiva);
         return (
           <div
             key={i}
-            className={`grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-3 md:gap-4 items-center rounded-2xl border px-4 py-3 ${
-              esElectiva ? 'border-amber-500/30 bg-amber-500/5' : 'border-slate-800/70 bg-slate-950/40'
-            }`}
+            className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-3 md:gap-4 items-center rounded-2xl border border-slate-800/70 bg-slate-950/40 px-4 py-3"
           >
             <div className="space-y-1.5">
               <p className="text-[10px] uppercase tracking-widest text-slate-500 font-semibold md:hidden">ITLA</p>
