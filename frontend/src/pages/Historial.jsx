@@ -78,6 +78,10 @@ const AsigCard = ({ asig }) => (
 const TrimestreCard = ({ trimestre, numero }) => {
   const esActivo = trimestre.estado === 'ACTIVO';
   const tieneNotas = (trimestre.asignaturas ?? []).some(a => a.calificacion);
+  // En curso y sin notas: se muestran los créditos inscritos en vez de 0
+  const creditosMostrados = esActivo && !tieneNotas
+    ? (trimestre.asignaturas ?? []).reduce((acc, a) => acc + (a.asignaturaPensum?.creditos ?? 0), 0)
+    : (trimestre.creditosAprobados ?? 0);
   return (
     <div className={`rounded-2xl border overflow-hidden transition-all duration-300 ${
       esActivo
@@ -111,7 +115,7 @@ const TrimestreCard = ({ trimestre, numero }) => {
         <div className="flex items-center gap-4 sm:gap-6">
           <div className="text-center">
             <p className="text-[10px] text-slate-500 font-semibold uppercase">Créditos</p>
-            <p className="text-lg font-bold text-slate-200">{trimestre.creditosAprobados ?? 0}</p>
+            <p className="text-lg font-bold text-slate-200">{creditosMostrados}</p>
           </div>
           <div className="text-center">
             <p className="text-[10px] text-slate-500 font-semibold uppercase">GPA</p>

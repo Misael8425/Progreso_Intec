@@ -1,3 +1,4 @@
+// OBSOLETO desde el T18: usar update-t18.js. Este script deja el T17 como trimestre activo si se vuelve a ejecutar.
 // Actualización NO destructiva: pasa la base de datos de T16 a T17 sin borrar nada más.
 // Uso: node prisma/update-t17.js   (o: npm run update:t17)
 // Es idempotente: se puede ejecutar más de una vez.

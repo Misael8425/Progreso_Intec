@@ -171,8 +171,8 @@ async function main() {
   ];
 
   // Estado real según el récord (fuente de verdad: Record_Según_Pensum PDF)
-  const cursando  = new Set([]); // T17 ya tiene notas publicadas; al elegir T18, agregar aquí las materias en curso
-  const pendientes = new Set(['CBM203', 'CBM305', 'IDS330', 'IDS330L', 'IDS3X5']);
+  const cursando  = new Set(['CBM203', 'IDS330', 'IDS330L']); // T18 (Nov 2026 - Ene 2027), inicia el 2/11/2026
+  const pendientes = new Set(['CBM305', 'IDS3X5']);
   // CBM202 fue reprobada múltiples veces y aprobada con C en Feb-Abr 2026
   // ISE2E1 ya tiene nota (ING237 → A)
 
@@ -497,14 +497,26 @@ async function main() {
 
     // ── T17: Agosto - Octubre 2026 ───────────────────────────────────────────
     // Pagado: RD$ 50,449.75 (recibo 000000032318) = 53,105.00 − 5 %
-    // Trimestre en curso: las notas ya están publicadas pero INTEC aún no lo cierra (sin "Condición Académica").
+    // Trimestre terminado (31/10/2026).
     {
-      periodo: "Agosto - Octubre 2026", estado: "ACTIVO", creditosAprobados: 10,
+      periodo: "Agosto - Octubre 2026", estado: "CERRADO", creditosAprobados: 10,
       gpa: 2.88, indiceTrimestral: 2.88, indiceAcumulado: 3.52,
       asignaturas: [
         { clave: "CBM208",  calif: "C", cr: 5, pts: 10,   profesor: "Pedro Jesus Lalondriz Mateo", horario: "Lun/Mier 07-09, Vier 07-08", aula: "EL402/VIRTU" },
         { clave: "INS380",  calif: "A", cr: 4, pts: 15,   profesor: "Jhonny De Jesus Liriano Batista", horario: "Mar/Jue 18-20", aula: "GC-213" },
         { clave: "INS380L", calif: "A", cr: 1, pts: 3.75, profesor: "Jhonny De Jesus Liriano Batista", horario: "Sáb 10-13", aula: "LABTI403" },
+      ]
+    },
+
+    // ── T18: Noviembre 2026 - Enero 2027 (EN CURSO · 02/11/2026 al 31/01/2027) ──
+    // Fuente: Volante de Selección impreso el 27/10/2026 (Mis Clases · BeeCampus)
+    {
+      periodo: "Noviembre 2026 - Enero 2027", estado: "ACTIVO", creditosAprobados: 0,
+      gpa: null, indiceTrimestral: null, indiceAcumulado: 3.52,
+      asignaturas: [
+        { clave: "CBM203",  calif: null, cr: 5, pts: null, profesor: "Pedro Jesus Lalondriz Mateo",       horario: "Lun/Mier 18-20, Vier 18-19", aula: "GC-302/VIRTU" },
+        { clave: "IDS330",  calif: null, cr: 3, pts: null, profesor: "Leopoldo Armando Martinez Diaz",    horario: "Jue 16-19",                  aula: "GC-313" },
+        { clave: "IDS330L", calif: null, cr: 1, pts: null, profesor: "Leopoldo Armando Martinez Diaz",    horario: "Jue 19-22",                  aula: "AJ-403" },
       ]
     },
   ];
@@ -536,20 +548,25 @@ async function main() {
   // ─────────────────────────────────────────────────────────────────────────────
   // 4. VOLANTE DE SELECCIÓN ACTIVO
   // ─────────────────────────────────────────────────────────────────────────────
-  console.log("4. Creando Volante de Selección activo (T17)...");
-  // Fuente: Volante de Selección impreso el 6/8/2026 (Mis Clases · BeeCampus)
+  console.log("4. Creando Volantes de Selección (T17 cerrado, T18 activo)...");
+  // T17: Volante impreso el 6/8/2026. T18: Volante impreso el 27/10/2026 (Mis Clases · BeeCampus)
   const VOLANTE_T17 = [
     { claveMateria: "CBM208",  profesor: "Pedro Jesus Lalondriz Mateo",     dia: "Lunes y Miércoles", horas: "07:00 - 09:00", aula: "EL402 (Presencial)" },
     { claveMateria: "CBM208",  profesor: "Pedro Jesus Lalondriz Mateo",     dia: "Viernes",           horas: "07:00 - 08:00", aula: "VIRTUAL" },
     { claveMateria: "INS380",  profesor: "Jhonny De Jesus Liriano Batista", dia: "Martes y Jueves",   horas: "18:00 - 20:00", aula: "GC-213" },
     { claveMateria: "INS380L", profesor: "Jhonny De Jesus Liriano Batista", dia: "Sábado",            horas: "10:00 - 13:00", aula: "LABTI403" },
   ];
+  const VOLANTE_T18 = [
+    { claveMateria: "CBM203",  profesor: "Pedro Jesus Lalondriz Mateo",     dia: "Lunes y Miércoles", horas: "18:00 - 20:00", aula: "GC-302 (Presencial)" },
+    { claveMateria: "CBM203",  profesor: "Pedro Jesus Lalondriz Mateo",     dia: "Viernes",           horas: "18:00 - 19:00", aula: "VIRTUAL" },
+    { claveMateria: "IDS330",  profesor: "Leopoldo Armando Martinez Diaz",  dia: "Jueves",            horas: "16:00 - 19:00", aula: "GC-313" },
+    { claveMateria: "IDS330L", profesor: "Leopoldo Armando Martinez Diaz",  dia: "Jueves",            horas: "19:00 - 22:00", aula: "AJ-403" },
+  ];
   await prisma.volanteSeleccion.create({
-    data: {
-      periodo: "Agosto - Octubre 2026",
-      activo: true,
-      horarios: { create: VOLANTE_T17 }
-    }
+    data: { periodo: "Agosto - Octubre 2026", activo: false, horarios: { create: VOLANTE_T17 } }
+  });
+  await prisma.volanteSeleccion.create({
+    data: { periodo: "Noviembre 2026 - Enero 2027", activo: true, horarios: { create: VOLANTE_T18 } }
   });
 
   console.log("✅ ¡Seed completado exitosamente!");
