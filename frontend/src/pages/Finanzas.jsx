@@ -80,12 +80,11 @@ const Finanzas = () => {
   const referenciaEsActiva = Boolean(trimestreActivo);
 
   // ── Créditos aprobados y pendientes ────────────────────────────────────────
-  const TOTAL_CREDITOS = 279;
-  const materiasAprobadasLista = pensum.filter(
-    m => m.estado === 'Aprobada' || m.calificacion === 'CO' || m.calificacion === 'EI'
-  );
-  const creditosAprobados = materiasAprobadasLista.reduce((acc, m) => acc + m.creditos, 0);
-  const creditosPendientes = TOTAL_CREDITOS - creditosAprobados;
+  // Créditos que faltan = los de las materias aún no aprobadas (incluye las en curso).
+  // INTEC reconoce las electivas convalidadas, así que no se resta contra los 279 del plan.
+  const creditosPendientes = pensum
+    .filter(m => !(m.estado === 'Aprobada' || m.calificacion === 'CO' || m.calificacion === 'EI'))
+    .reduce((acc, m) => acc + m.creditos, 0);
 
   // ── Proyección a graduación ─────────────────────────────────────────────────
   // Usa la tarifa vigente (la del último trimestre) e incluye el cargo de

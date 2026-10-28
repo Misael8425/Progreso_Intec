@@ -132,7 +132,7 @@ export const COMPONENTES_ELECTIVAS = [
     espacios: [
       {
         slot: 'EEE2X1',
-        convalidada: { itla: 'CBG 210 · Probabilidad y Estadística', cr: 0 },
+        convalidada: { itla: 'CBG 210 · Probabilidad y Estadística', cr: 0, cuentaComo: 0 },
       },
       {
         slot: 'EEE2X2',
@@ -149,7 +149,9 @@ export const COMPONENTES_ELECTIVAS = [
     espacios: [
       {
         slot: 'EEP3X1',
-        convalidada: { itla: 'TDS 005 · Diseño Centrado en el Usuario', cr: 0 },
+        // INTEC la registra con 0 créditos, pero reconoce la convalidación para el plan: cuenta como una
+        // electiva completa de 4 créditos.
+        convalidada: { itla: 'TDS 005 · Diseño Centrado en el Usuario', cr: 0, cuentaComo: 4 },
       },
       { slot: 'EEP3X2', real: { clave: 'ADM337', nombre: 'Derecho Comercial', cr: 4 } },
       { slot: 'EEP3X3', real: { clave: 'INS369', nombre: 'Inteligencia de Negocios', cr: 4 } },
@@ -181,16 +183,22 @@ export const resumenElectivas = (historial = []) => {
     // que puede traer valores viejos. Si el historial no cargó, se asume lo del récord.
     const espacios = comp.espacios.map((esp) => {
       const cursada = buscar(esp.slot);
-      const creditos = esp.real?.cr ?? esp.convalidada?.cr ?? 0;
+      const creditos = esp.real?.cr ?? esp.convalidada?.cr ?? 0;            // créditos que muestra el récord
+      const aporte = esp.convalidada ? (esp.convalidada.cuentaComo ?? 0) : creditos; // lo que cuenta para el plan
       const cuenta = Boolean(cursada) || historial.length === 0;
-      return { ...esp, cursada, creditos, cuenta };
+      return { ...esp, cursada, creditos, aporte, cuenta };
     });
-    const obtenido = espacios.reduce((acc, e) => acc + (e.cuenta ? e.creditos : 0), 0);
+    const cursados = espacios.reduce((acc, e) => acc + (e.cuenta && e.real ? e.creditos : 0), 0);
+    const porConvalidacion = espacios.reduce((acc, e) => acc + (e.cuenta && e.convalidada ? e.aporte : 0), 0);
+    const obtenido = cursados + porConvalidacion;
     return {
       ...comp,
       espacios,
+      cursados,
+      porConvalidacion,
       obtenido,
       faltante: Math.max(comp.requerido - obtenido, 0),
+      espaciosCompletos: espacios.filter(e => e.cuenta).length,
     };
   });
 };

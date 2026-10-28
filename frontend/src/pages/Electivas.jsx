@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Loader2, GraduationCap, ArrowRight, TriangleAlert, Repeat2, Layers } from 'lucide-react';
+import { Loader2, GraduationCap, ArrowRight, Repeat2, Layers } from 'lucide-react';
 import { obtenerHistorialTrimestres } from '../services/api';
 import {
   CONVALIDACIONES,
@@ -43,6 +43,9 @@ const ComponenteCard = ({ comp }) => {
             <span className="text-slate-500 text-base font-medium"> / {comp.requerido} cr</span>
           </p>
           {!completo && <p className="text-xs text-amber-400 font-semibold">Faltan {comp.faltante} créditos</p>}
+          {completo && comp.porConvalidacion > 0 && (
+            <p className="text-xs text-slate-500">{comp.cursados} cursados + {comp.porConvalidacion} por convalidación</p>
+          )}
         </div>
       </div>
 
@@ -70,7 +73,10 @@ const ComponenteCard = ({ comp }) => {
                 {convalidada ? (
                   <>
                     <p className="text-sm font-semibold text-slate-200">Convalidada desde el ITLA</p>
-                    <p className="text-xs text-slate-500">{esp.convalidada.itla}</p>
+                    <p className="text-xs text-slate-500">
+                      {esp.convalidada.itla}
+                      {esp.aporte > 0 ? ` · cuenta como electiva completa (${esp.aporte} cr)` : ''}
+                    </p>
                   </>
                 ) : (
                   <>
@@ -159,8 +165,8 @@ const ConvalidacionesSeccion = () => (
     </div>
 
     <p className="text-xs text-slate-500 mt-4">
-      Las dos electivas convalidadas (EEE2X1 y EEP3X1) se reconocieron con 0 créditos en INTEC. Las
-      materias convalidadas no generan cargo y no entran en el índice académico.
+      INTEC registra las dos electivas convalidadas (EEE2X1 y EEP3X1) con 0 créditos, pero las reconoce en tu plan.
+      Las materias convalidadas no generan cargo y no entran en el índice académico.
     </p>
   </section>
 );
@@ -179,10 +185,10 @@ const Electivas = () => {
   }, []);
 
   const componentes = useMemo(() => resumenElectivas(historial), [historial]);
-  const obtenido = componentes.reduce((acc, c) => acc + c.obtenido, 0);
-  const requerido = componentes.reduce((acc, c) => acc + c.requerido, 0);
-  const faltante = Math.max(requerido - obtenido, 0);
-  const profesional = componentes.find(c => c.id === 'profesionales');
+  const cursados = componentes.reduce((acc, c) => acc + c.cursados, 0);
+  const porConvalidacion = componentes.reduce((acc, c) => acc + c.porConvalidacion, 0);
+  const espaciosTotal = componentes.reduce((acc, c) => acc + c.espacios.length, 0);
+  const espaciosCompletos = componentes.reduce((acc, c) => acc + c.espaciosCompletos, 0);
 
   if (loading) {
     return (
@@ -210,45 +216,31 @@ const Electivas = () => {
       {/* Resumen */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="rounded-2xl border border-slate-800/60 bg-slate-900/40 p-5">
-          <p className="text-xs text-slate-500 flex items-center gap-1.5"><Layers className="w-3.5 h-3.5" /> Créditos de electivas</p>
+          <p className="text-xs text-slate-500 flex items-center gap-1.5"><Layers className="w-3.5 h-3.5" /> Espacios de electivas</p>
           <p className="text-3xl font-extrabold text-white tabular-nums mt-1">
-            {obtenido}<span className="text-slate-500 text-lg font-medium"> / {requerido}</span>
+            {espaciosCompletos}<span className="text-slate-500 text-lg font-medium"> / {espaciosTotal}</span>
           </p>
+          <p className="text-xs text-slate-500 mt-0.5">
+            {espaciosCompletos === espaciosTotal ? 'Todas completas' : 'Hay espacios pendientes'}
+          </p>
+        </div>
+        <div className="rounded-2xl border border-slate-800/60 bg-slate-900/40 p-5">
+          <p className="text-xs text-slate-500">Créditos de electivas cursados</p>
+          <p className="text-3xl font-extrabold text-cyan-400 tabular-nums mt-1">
+            {cursados}<span className="text-slate-500 text-lg font-medium"> cr</span>
+          </p>
+          {porConvalidacion > 0 && (
+            <p className="text-xs text-slate-500 mt-0.5">+ {porConvalidacion} reconocidos por convalidación</p>
+          )}
         </div>
         <div className="rounded-2xl border border-slate-800/60 bg-slate-900/40 p-5">
           <p className="text-xs text-slate-500">Convalidados del ITLA</p>
           <p className="text-3xl font-extrabold text-sky-300 tabular-nums mt-1">
             {TOTAL_CREDITOS_CONVALIDADOS}<span className="text-slate-500 text-lg font-medium"> cr</span>
           </p>
-        </div>
-        <div className={`rounded-2xl border p-5 ${faltante > 0 ? 'border-amber-500/40 bg-amber-500/5' : 'border-slate-800/60 bg-slate-900/40'}`}>
-          <p className="text-xs text-slate-500">Créditos de electivas por confirmar</p>
-          <p className={`text-3xl font-extrabold tabular-nums mt-1 ${faltante > 0 ? 'text-amber-400' : 'text-emerald-400'}`}>
-            {faltante}<span className="text-slate-500 text-lg font-medium"> cr</span>
-          </p>
+          <p className="text-xs text-slate-500 mt-0.5">de {TOTAL_CREDITOS_ITLA} créditos del ITLA</p>
         </div>
       </div>
-
-      {/* Aviso: electiva profesional */}
-      {profesional && profesional.faltante > 0 && (
-        <div className="flex gap-3 rounded-2xl border border-amber-500/40 bg-amber-500/5 p-4 md:p-5">
-          <TriangleAlert className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-          <div className="text-sm text-slate-300 space-y-1.5">
-            <p className="font-semibold text-amber-300">
-              Electivas profesionales: {profesional.obtenido} de {profesional.requerido} créditos
-            </p>
-            <p>
-              El plan pide 12 créditos de electivas profesionales. La primera (EEP3X1) se convalidó desde el ITLA
-              con <b>0 créditos</b> (TDS 005, que en el ITLA valía 4), así que hoy suman 8: Derecho Comercial e
-              Inteligencia de Negocios. Por eso el total llega a 275 de 279 créditos.
-            </p>
-            <p className="text-slate-400">
-              Confirma con Registro o tu coordinación si te exigen completar esos 4 créditos con otra electiva
-              profesional (una materia de 4 créditos o dos de 2).
-            </p>
-          </div>
-        </div>
-      )}
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {componentes.map(c => <ComponenteCard key={c.id} comp={c} />)}
