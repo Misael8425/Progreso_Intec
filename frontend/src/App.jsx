@@ -7,6 +7,7 @@ import Simulador from './pages/Simulador';
 import Volante from './pages/Volante';
 import Dashboard from './pages/Dashboard';
 import Finanzas from './pages/Finanzas';
+import Electivas from './pages/Electivas';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/simulador" element={<Simulador />} />
             <Route path="/volante" element={<Volante />} />
             <Route path="/finanzas" element={<Finanzas />} />
+            <Route path="/electivas" element={<Electivas />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>

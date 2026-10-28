@@ -65,6 +65,35 @@ async function main() {
     if (r.count === 0) console.warn(`! No existe ${a.claveMateria} en el pensum`);
   }
 
+  // 3b. Pensum actualizado (Consejo Académico, 02/11/2023): ISE2X1 ya no existe y cada
+  //     electiva genérica indica qué materia cursaste en ese espacio.
+  const ISE2X1_USOS =
+    (await prisma.asignaturaCursada.count({ where: { claveMateria: 'ISE2X1' } })) +
+    (await prisma.horarioAsignatura.count({ where: { claveMateria: 'ISE2X1' } }));
+  if (ISE2X1_USOS === 0) {
+    const r = await prisma.asignaturaPensum.deleteMany({ where: { clave: 'ISE2X1' } });
+    if (r.count) console.log('- ISE2X1 eliminada del pensum (no existe en el plan actualizado)');
+  } else {
+    console.warn('! ISE2X1 tiene registros asociados; no se eliminó');
+  }
+  const NOMBRES_ELECTIVAS = {
+    CBA1X3: 'VIDA EN EL MEDIO AMBIENTE (ELECTIVAS) · CBA103 Fundamentos de Gestión Ambiental',
+    EAA1X1: 'ELECTIVAS DE AREAS ACADEMICAS I · ASM104 Vida Saludable',
+    EAA1X2: 'ELECTIVAS DE AREAS ACADEMICAS II · ASM107 Nutrición Saludable',
+    EAA1X3: 'ELECTIVAS DE AREAS ACADEMICAS III · CBA106 Ambiente y Cultura',
+    EAA1X4: 'ELECTIVAS DE AREAS ACADEMICAS IV · NEG101 Inteligencia Financiera',
+    ISE2E1: 'IMPACTO SOCIAL (ELECTIVA) · ING237 Impacto Social (ING)',
+    EEE2X1: 'ELECTIVAS DE ESTUDIOS ESPECIALIZADOS I · Convalidada (ITLA CBG 210 Probabilidad y Estadística)',
+    EEE2X2: 'ELECTIVAS DE ESTUDIOS ESPECIALIZADOS II · CSG210 Derechos Humanos',
+    EEP3X1: 'ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES I · Convalidada (ITLA TDS 005 Diseño Centrado en el Usuario, 0 créditos)',
+    EEP3X2: 'ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES II · ADM337 Derecho Comercial',
+    EEP3X3: 'ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES III · INS369 Inteligencia de Negocios',
+  };
+  for (const [clave, nombre] of Object.entries(NOMBRES_ELECTIVAS)) {
+    await prisma.asignaturaPensum.updateMany({ where: { clave }, data: { nombre } });
+  }
+  console.log('~ Nombres de electivas actualizados');
+
   // 4. Volante: desactivar los anteriores y dejar activo el de T18
   await prisma.volanteSeleccion.updateMany({ where: { periodo: { not: PERIODO_T18 } }, data: { activo: false } });
   const v = await prisma.volanteSeleccion.findUnique({ where: { periodo: PERIODO_T18 } });

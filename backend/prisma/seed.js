@@ -25,12 +25,12 @@ async function main() {
     // ── Trimestre 1 (21 CR) ──────────────────────────────────────────────────
     { clave: "AHC109",  nombre: "REDACCION",                                                    creditos: 4, trimestreSugerido: 1  },
     { clave: "AHO102",  nombre: "ORIENTACION ACADEMICA E INSTITUCIONAL",                        creditos: 0, trimestreSugerido: 1  },
-    { clave: "CBA1X3",  nombre: "VIDA EN EL MEDIO AMBIENTE (ELECTIVAS)",                        creditos: 2, trimestreSugerido: 1  },
+    { clave: "CBA1X3",  nombre: "VIDA EN EL MEDIO AMBIENTE (ELECTIVAS) · CBA103 Fundamentos de Gestión Ambiental",                        creditos: 2, trimestreSugerido: 1  },
     { clave: "CBM101",  nombre: "ALGEBRA Y GEOMETRIA ANALITICA",                                creditos: 5, trimestreSugerido: 1  },
     { clave: "CSH112",  nombre: "CIUDADANIA Y ETICA",                                           creditos: 2, trimestreSugerido: 1  },
-    { clave: "EAA1X1",  nombre: "ELECTIVAS DE AREAS ACADEMICAS I",                             creditos: 2, trimestreSugerido: 1  },
-    { clave: "EAA1X2",  nombre: "ELECTIVAS DE AREAS ACADEMICAS II",                            creditos: 2, trimestreSugerido: 1  },
-    { clave: "EAA1X3",  nombre: "ELECTIVAS DE AREAS ACADEMICAS III",                           creditos: 2, trimestreSugerido: 1  },
+    { clave: "EAA1X1",  nombre: "ELECTIVAS DE AREAS ACADEMICAS I · ASM104 Vida Saludable",                             creditos: 2, trimestreSugerido: 1  },
+    { clave: "EAA1X2",  nombre: "ELECTIVAS DE AREAS ACADEMICAS II · ASM107 Nutrición Saludable",                            creditos: 2, trimestreSugerido: 1  },
+    { clave: "EAA1X3",  nombre: "ELECTIVAS DE AREAS ACADEMICAS III · CBA106 Ambiente y Cultura",                           creditos: 2, trimestreSugerido: 1  },
     { clave: "IDS207",  nombre: "INTRODUCCION A LA INGENIERIA DE SOFTWARE",                    creditos: 2, trimestreSugerido: 1  },
     { clave: "SHI103",  nombre: "INGLES 01 (BASICO I)",                                        creditos: 0, trimestreSugerido: 1  },
 
@@ -38,7 +38,7 @@ async function main() {
     { clave: "AHC110",  nombre: "ARGUMENTACION LINGUISTICA",                                   creditos: 4, trimestreSugerido: 2  },
     { clave: "CBM102",  nombre: "CALCULO DIFERENCIAL",                                         creditos: 5, trimestreSugerido: 2  },
     { clave: "CSS102",  nombre: "SER HUMANO Y SOCIEDAD: TEMAS SOCIALES CONTEMPORANEOS",        creditos: 2, trimestreSugerido: 2  },
-    { clave: "EAA1X4",  nombre: "ELECTIVAS DE AREAS ACADEMICAS IV",                            creditos: 2, trimestreSugerido: 2  },
+    { clave: "EAA1X4",  nombre: "ELECTIVAS DE AREAS ACADEMICAS IV · NEG101 Inteligencia Financiera",                            creditos: 2, trimestreSugerido: 2  },
     { clave: "IDS323",  nombre: "TECNICAS FUNDAMENTALES DE INGENIERIA DE SOFTWARE",            creditos: 4, trimestreSugerido: 2  },
     { clave: "IDS323L", nombre: "LABORATORIO TECNICAS FUNDAMENTALES DE INGENIERIA DE SOFTWARE",creditos: 1, trimestreSugerido: 2  },
     { clave: "ING102",  nombre: "INTRODUCCION A LA PROGRAMACION",                              creditos: 2, trimestreSugerido: 2  },
@@ -99,7 +99,7 @@ async function main() {
     { clave: "INS380L", nombre: "LABORATORIO DE BASES DE DATOS II",                            creditos: 1, trimestreSugerido: 7  },
 
     // ── Trimestre 8 (22 CR) ──────────────────────────────────────────────────
-    { clave: "EEE2X1",  nombre: "ELECTIVAS DE ESTUDIOS ESPECIALIZADOS I",                      creditos: 0, trimestreSugerido: 8  },
+    { clave: "EEE2X1",  nombre: "ELECTIVAS DE ESTUDIOS ESPECIALIZADOS I · Convalidada (ITLA CBG 210 Probabilidad y Estadística)",                      creditos: 0, trimestreSugerido: 8  },
     { clave: "ICS202",  nombre: "ALGORITMOS MALICIOSOS",                                       creditos: 4, trimestreSugerido: 8  },
     { clave: "ICS202L", nombre: "LABORATORIO DE ALGORITMOS MALICIOSOS",                        creditos: 1, trimestreSugerido: 8  },
     { clave: "IDS325",  nombre: "ASEGURAMIENTO DE LA CALIDAD DEL SOFTWARE",                    creditos: 4, trimestreSugerido: 8  },
@@ -108,7 +108,6 @@ async function main() {
     { clave: "IDS347",  nombre: "TENDENCIAS EN DESARROLLO DE SOFTWARE",                        creditos: 3, trimestreSugerido: 8  },
     { clave: "IDS347L", nombre: "LABORATORIO TENDENCIAS EN DESARROLLO DE SOFTWARE",            creditos: 1, trimestreSugerido: 8  },
     { clave: "ING214",  nombre: "ANALISIS DE DATOS EN INGENIERIA",                             creditos: 4, trimestreSugerido: 8  },
-    { clave: "ISE2X1",  nombre: "ELECTIVA DE INNOVACION SOCIAL I",                             creditos: 0, trimestreSugerido: 8  },
 
     // ── Trimestre 9 (19 CR) ──────────────────────────────────────────────────
     { clave: "CON213",  nombre: "FUNDAMENTOS DE CONTABILIDAD",                                 creditos: 2, trimestreSugerido: 9  },
@@ -129,7 +128,7 @@ async function main() {
     { clave: "INS371",  nombre: "ARQUITECTURA DEL COMPUTADOR",                                 creditos: 3, trimestreSugerido: 10 },
     { clave: "INS371L", nombre: "LABORATORIO ARQUITECTURA COMPUTADOR",                         creditos: 1, trimestreSugerido: 10 },
     // ISE2E1 = Electiva Innovación Social — cursada como ING237 (Impacto Social)
-    { clave: "ISE2E1",  nombre: "IMPACTO SOCIAL (ELECTIVA)",                                   creditos: 4, trimestreSugerido: 10 },
+    { clave: "ISE2E1",  nombre: "IMPACTO SOCIAL (ELECTIVA) · ING237 Impacto Social (ING)",                                   creditos: 4, trimestreSugerido: 10 },
 
     // ── Trimestre 11 (20 CR) ─────────────────────────────────────────────────
     { clave: "ECO322",  nombre: "ECONOMIA DE EMPRESA",                                         creditos: 4, trimestreSugerido: 11 },
@@ -144,7 +143,7 @@ async function main() {
 
     // ── Trimestre 12 (18 CR) ─────────────────────────────────────────────────
     { clave: "ADM315",  nombre: "ADMINISTRACION Y GESTION EMPRESARIAL",                        creditos: 4, trimestreSugerido: 12 },
-    { clave: "EEE2X1",  nombre: "ELECTIVAS DE ESTUDIOS ESPECIALIZADOS I",                      creditos: 0, trimestreSugerido: 12 }, // ya existe en T8, se omite duplicado
+    { clave: "EEE2X1",  nombre: "ELECTIVAS DE ESTUDIOS ESPECIALIZADOS I · Convalidada (ITLA CBG 210 Probabilidad y Estadística)",                      creditos: 0, trimestreSugerido: 12 }, // ya existe en T8, se omite duplicado
     { clave: "ICS320",  nombre: "FUNDAMENTOS DE CIBERSEGURIDAD",                               creditos: 2, trimestreSugerido: 12 },
     { clave: "IDS339",  nombre: "DEVOPS Y DEVSECOPS",                                          creditos: 3, trimestreSugerido: 12 },
     { clave: "IDS352",  nombre: "ANTEPROYECTO DE GRADO",                                       creditos: 4, trimestreSugerido: 12 },
@@ -153,9 +152,9 @@ async function main() {
 
     // ── Trimestre 13 (10 CR) ─────────────────────────────────────────────────
     // EEE2X2 = cursada como CSG210 (Derechos Humanos)
-    { clave: "EEE2X2",  nombre: "ELECTIVAS DE ESTUDIOS ESPECIALIZADOS II",                     creditos: 4, trimestreSugerido: 13 },
+    { clave: "EEE2X2",  nombre: "ELECTIVAS DE ESTUDIOS ESPECIALIZADOS II · CSG210 Derechos Humanos",                     creditos: 4, trimestreSugerido: 13 },
     // EEP3X1 = cursada como CO (convalidada)
-    { clave: "EEP3X1",  nombre: "ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES I",                  creditos: 0, trimestreSugerido: 13 },
+    { clave: "EEP3X1",  nombre: "ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES I · Convalidada (ITLA TDS 005 Diseño Centrado en el Usuario, 0 créditos)",                  creditos: 0, trimestreSugerido: 13 },
     { clave: "IDS322",  nombre: "MANTENIMIENTO DE SOFTWARE",                                   creditos: 4, trimestreSugerido: 13 },
     { clave: "IDS355",  nombre: "PROYECTO DE GRADO",                                           creditos: 4, trimestreSugerido: 13 },
     { clave: "IDS356",  nombre: "PASANTIA PROFESIONAL II",                                     creditos: 2, trimestreSugerido: 13 },
@@ -163,9 +162,9 @@ async function main() {
 
     // ── Trimestre 14 (8 CR) ──────────────────────────────────────────────────
     // EEP3X2 = cursada como ADM337 (Derecho Comercial)
-    { clave: "EEP3X2",  nombre: "ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES II",                 creditos: 4, trimestreSugerido: 14 },
+    { clave: "EEP3X2",  nombre: "ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES II · ADM337 Derecho Comercial",                 creditos: 4, trimestreSugerido: 14 },
     // EEP3X3 = cursada como INS369 (Inteligencia de Negocios)
-    { clave: "EEP3X3",  nombre: "ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES III",                creditos: 4, trimestreSugerido: 14 },
+    { clave: "EEP3X3",  nombre: "ELECTIVAS DE ESTUDIOS PROFESIONALIZANTES III · INS369 Inteligencia de Negocios",                creditos: 4, trimestreSugerido: 14 },
     { clave: "IDS334",  nombre: "SEMINARIO DE TECNOLOGIA E INGENIERIA DE SOFTWARE",            creditos: 4, trimestreSugerido: 14 },
     { clave: "IDS357",  nombre: "PROYECTO FINAL DE GRADO",                                     creditos: 4, trimestreSugerido: 14 },
   ];
@@ -217,7 +216,7 @@ async function main() {
     // T14
     'EEP3X2': 'A',  'EEP3X3': 'A',  'IDS334': 'A',  'IDS357': 'A',
     // Restantes
-    'ISE2X1': 'CO', 'IDS354': null,
+    'IDS354': null,
     // T16 y T17 (récord impreso 21/10/2026)
     'CBM208': 'C',  'IDS328': 'A+', 'IDS328L': 'A+', 'INS380': 'A', 'INS380L': 'A',
   };

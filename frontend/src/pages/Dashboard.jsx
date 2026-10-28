@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import { obtenerPensum, obtenerHistorialTrimestres, obtenerVolanteActivo } from '../services/api';
 import { Loader2, TrendingUp, BookCheck, BookDashed, CalendarClock, MapPin, Clock, History } from 'lucide-react';
@@ -89,6 +90,12 @@ const Dashboard = () => {
   const trimestresQueQuedan = Math.max(PLAN.trimestresPermanencia - trimestresTranscurridos, 0);
   const proximosPeriodos = periodosRestantes(trimestresDescendentes[0]?.periodo, trimestresQueQuedan);
   const creditosPendientes = Math.max(TOTAL_CREDITOS - creditosAprobados, 0);
+  // Créditos que faltan pero que ninguna materia del pensum cubre (hoy: 4 de electiva profesional,
+  // porque EEP3X1 se convalidó con 0 créditos). Ver la página "Electivas".
+  const creditosEnMateriasPendientes = pensum
+    .filter(m => !(m.estado === 'Aprobada' || m.calificacion === 'CO' || m.calificacion === 'EI'))
+    .reduce((acc, m) => acc + m.creditos, 0);
+  const creditosPorConfirmar = Math.max(creditosPendientes - creditosEnMateriasPendientes, 0);
 
   // 2. Clases de Hoy
   const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -146,6 +153,11 @@ const Dashboard = () => {
               <p className="text-xl text-slate-500 font-medium">/ {TOTAL_CREDITOS}</p>
             </div>
             <p className="text-xs text-slate-400 mt-2">Créditos aprobados en el plan</p>
+            {creditosPorConfirmar > 0 && (
+              <Link to="/electivas" className="block text-xs text-amber-400/90 hover:text-amber-300 mt-2">
+                Faltan {creditosPendientes}: {creditosPorConfirmar} son de electiva profesional por confirmar →
+              </Link>
+            )}
           </div>
           <div className="w-full bg-slate-800 rounded-full h-2 mt-6 overflow-hidden">
             <div className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full" style={{ width: `${porcentajeAvanceCreditos}%` }}></div>

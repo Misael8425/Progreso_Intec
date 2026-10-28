@@ -3,7 +3,7 @@
 
 export const PLAN = {
   totalCreditos: 279,
-  totalMaterias: 113,
+  totalMaterias: 112,
   // Máximo de trimestres que INTEC permite para terminar la carrera
   trimestresPermanencia: 20,
 };
