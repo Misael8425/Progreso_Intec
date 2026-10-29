@@ -23,27 +23,3 @@ export const obtenerVolanteActivo = async () => {
   }
   return response.json();
 };
-
-export const obtenerHistorialSimulaciones = async () => {
-  const response = await fetch(`${API_URL}/indice`);
-  if (!response.ok) {
-    throw new Error('Error al obtener el historial de simulaciones');
-  }
-  return response.json();
-};
-
-export const calcularSimulacion = async (asignaturas) => {
-  const response = await fetch(`${API_URL}/indice`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ asignaturas })
-  });
-  
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || 'Error al calcular la simulación');
-  }
-  return response.json();
-};

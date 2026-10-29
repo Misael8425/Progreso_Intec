@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const indiceRoutes = require('./routes/indice.routes');
 const pensumRoutes = require('./routes/pensum.routes');
 const trimestreRoutes = require('./routes/trimestre.routes');
 const volanteRoutes = require('./routes/volante.routes');
@@ -24,7 +23,6 @@ app.use(cors({
 app.use(express.json());
 
 // Rutas base
-app.use('/api/indice', indiceRoutes);
 app.use('/api/pensum', pensumRoutes);
 app.use('/api/trimestres', trimestreRoutes);
 app.use('/api/volantes', volanteRoutes);

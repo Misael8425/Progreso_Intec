@@ -1,6 +1,6 @@
 // Actualización NO destructiva: cierra el T17 y deja el T18 (Nov 2026 - Ene 2027) como trimestre en curso.
 // Uso: npm run update:t18
-// Es idempotente: se puede ejecutar más de una vez. No toca finanzas ni simulaciones.
+// Es idempotente: se puede ejecutar más de una vez. No toca finanzas.
 require('dotenv').config();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
